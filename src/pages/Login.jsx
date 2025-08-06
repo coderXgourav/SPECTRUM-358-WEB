@@ -193,30 +193,43 @@ const LoginPage = () => {
         .float-delay-4 {
           animation-delay: 4s;
         }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+          .mobile-reduced-animation .float,
+          .mobile-reduced-animation .float-slow,
+          .mobile-reduced-animation .float-reverse,
+          .mobile-reduced-animation .drift,
+          .mobile-reduced-animation .gentle-float,
+          .mobile-reduced-animation .rocket-float,
+          .mobile-reduced-animation .rocket-hover {
+            animation-duration: 8s;
+          }
+        }
       `}</style>
 
-      <div className="min-h-screen flex">
+      <div className="min-h-screen flex flex-col lg:flex-row mobile-reduced-animation">
           {/* Left Section - Login Form */}
-          <div className="w-1/2 bg-white flex items-center justify-center px-8 py-12">
+          <div className="w-full lg:w-1/2 bg-white flex items-center justify-center px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12 order-2 lg:order-1">
             <div className="max-w-md w-full mx-auto">
               {/* Logo */}
               <h1
-                className="text-2xl font-bold mb-16 text-center"
+                className="text-xl sm:text-2xl font-bold mb-8 sm:mb-12 lg:mb-16 text-center"
                 style={{ color: "#E5B700" }}
               >
                 Spectrum 358
               </h1>
 
               {/* Login Header */}
-              <div className="mb-8 text-center">
-                <h2 className="text-4xl font-bold text-gray-900 mb-2">Log in</h2>
-                <p className="text-gray-600">
+              <div className="mb-6 sm:mb-8 text-center">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Log in</h2>
+                <p className="text-sm sm:text-base text-gray-600">
                   Welcome back! Please enter your details.
                 </p>
               </div>
 
               {/* Login Form */}
-              <div className="space-y-5">
+              <div className="space-y-4 sm:space-y-5">
                 {/* Email Input */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -227,7 +240,7 @@ const LoginPage = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="example@email.com"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm sm:text-base"
                   />
                 </div>
 
@@ -242,7 +255,7 @@ const LoginPage = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••••••"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent pr-10"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent pr-10 text-sm sm:text-base"
                     />
                     <button
                       type="button"
@@ -250,7 +263,7 @@ const LoginPage = () => {
                       className="absolute inset-y-0 right-0 flex items-center pr-3"
                     >
                       <svg
-                        className="h-5 w-5 text-gray-400"
+                        className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -280,13 +293,13 @@ const LoginPage = () => {
                       className="h-4 w-4 rounded border-gray-300"
                       style={{ accentColor: "#E5B700" }}
                     />
-                    <span className="ml-2 text-gray-600 text-sm">
+                    <span className="ml-2 text-gray-600 text-xs sm:text-sm">
                       Remember for 30 days
                     </span>
                   </label>
                   <a
                     href="#"
-                    className="text-sm hover:underline"
+                    className="text-xs sm:text-sm hover:underline"
                     style={{ color: "#E5B700" }}
                   >
                     Forgot password
@@ -297,7 +310,7 @@ const LoginPage = () => {
                 <button
                   type="submit"
                   onClick={handleSubmit}
-                  className="w-full py-3 px-4 text-white font-semibold rounded-lg hover:opacity-90 transition duration-200"
+                  className="w-full py-2.5 sm:py-3 px-4 text-white font-semibold rounded-lg hover:opacity-90 transition duration-200 text-sm sm:text-base"
                   style={{
                     background: "linear-gradient(to right, #E5B700, #DE8806)",
                   }}
@@ -306,11 +319,11 @@ const LoginPage = () => {
                 </button>
 
                 {/* Or continue with */}
-                <div className="relative my-6">
+                <div className="relative my-4 sm:my-6">
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-gray-300"></div>
                   </div>
-                  <div className="relative flex justify-center text-sm">
+                  <div className="relative flex justify-center text-xs sm:text-sm">
                     <span className="px-2 bg-white text-gray-500">
                       Or continue with
                     </span>
@@ -318,12 +331,12 @@ const LoginPage = () => {
                 </div>
 
                 {/* Social Login Buttons */}
-                <div className="flex space-x-3">
+                <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
                   <button
                     type="button"
-                    className="flex-1 flex items-center justify-center px-4 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition duration-200 font-medium"
+                    className="flex-1 flex items-center justify-center px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition duration-200 font-medium text-sm sm:text-base"
                   >
-                    <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-2" viewBox="0 0 24 24">
                       <path
                         fill="currentColor"
                         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -345,10 +358,10 @@ const LoginPage = () => {
                   </button>
                   <button
                     type="button"
-                    className="flex-1 flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200 font-medium"
+                    className="flex-1 flex items-center justify-center px-3 sm:px-4 py-2.5 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200 font-medium text-sm sm:text-base"
                   >
                     <svg
-                      className="w-5 h-5 mr-2"
+                      className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
@@ -363,94 +376,94 @@ const LoginPage = () => {
 
           {/* Right Section - Illustration with Animated Clouds */}
           <div
-            className="w-1/2 relative overflow-hidden flex items-center justify-center"
+            className="w-full lg:w-1/2 relative overflow-hidden flex items-center justify-center min-h-[300px] sm:min-h-[400px] lg:min-h-0 order-1 lg:order-2"
             style={{
               background: "linear-gradient(135deg, #E5B700 0%, #DE8806 100%)",
             }}
           >
-            {/* Background Clouds Layer - Animated */}
-            <div className="absolute inset-0">
+            {/* Background Clouds Layer - Animated - Hidden on small screens */}
+            <div className="absolute inset-0 hidden sm:block">
               {/* Top left cloud */}
-              <div className="absolute top-8 left-12 w-32 h-20 opacity-40">
+              <div className="absolute top-2 sm:top-8 left-3 sm:left-12 w-16 sm:w-24 lg:w-32 h-10 sm:h-15 lg:h-20 opacity-40">
                 <CloudImage animationType="float float-delay-1" />
               </div>
 
               {/* Top right cloud */}
-              <div className="absolute top-16 right-8 w-36 h-22 opacity-35">
+              <div className="absolute top-4 sm:top-16 right-2 sm:right-8 w-18 sm:w-27 lg:w-36 h-11 sm:h-16 lg:h-22 opacity-35">
                 <CloudImage animationType="float-slow float-delay-2" />
               </div>
 
               {/* Bottom left cloud */}
-              <div className="absolute bottom-20 left-16 w-40 h-24 opacity-30">
+              <div className="absolute bottom-5 sm:bottom-20 left-4 sm:left-16 w-20 sm:w-30 lg:w-40 h-12 sm:h-18 lg:h-24 opacity-30">
                 <CloudImage animationType="drift float-delay-3" />
               </div>
 
               {/* Bottom right cloud */}
-              <div className="absolute bottom-12 right-20 w-28 h-16 opacity-40">
+              <div className="absolute bottom-3 sm:bottom-12 right-5 sm:right-20 w-14 sm:w-21 lg:w-28 h-8 sm:h-12 lg:h-16 opacity-40">
                 <CloudImage animationType="float-reverse float-delay-4" />
               </div>
             </div>
 
             {/* Main Card Container */}
             <div className="relative z-10">
-              {/* Clouds around the card - All Animated */}
-              <div className="absolute -top-16 -left-20 w-48 h-28 opacity-90">
+              {/* Clouds around the card - All Animated - Reduced on mobile */}
+              <div className="absolute -top-4 sm:-top-8 lg:-top-16 -left-5 sm:-left-10 lg:-left-20 w-24 sm:w-36 lg:w-48 h-14 sm:h-21 lg:h-28 opacity-60 sm:opacity-90 hidden sm:block">
                 <CloudImage
                   animationType="drift"
-                  style={{ filter: "drop-shadow(0 6px 10px rgba(0,0,0,0.2))" }}
+                  style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
                 />
               </div>
 
-              <div className="absolute -top-8 -right-24 w-52 h-32 opacity-85">
+              <div className="absolute -top-2 sm:-top-4 lg:-top-8 -right-6 sm:-right-12 lg:-right-24 w-26 sm:w-39 lg:w-52 h-16 sm:h-24 lg:h-32 opacity-55 sm:opacity-85 hidden sm:block">
                 <CloudImage
                   animationType="float-slow float-delay-1"
-                  style={{ filter: "drop-shadow(0 6px 10px rgba(0,0,0,0.2))" }}
+                  style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
                 />
               </div>
 
-              <div className="absolute -bottom-20 -left-16 w-56 h-34 opacity-95">
+              <div className="absolute -bottom-5 sm:-bottom-10 lg:-bottom-20 -left-4 sm:-left-8 lg:-left-16 w-28 sm:w-42 lg:w-56 h-17 sm:h-25 lg:h-34 opacity-65 sm:opacity-95 hidden sm:block">
                 <CloudImage
                   animationType="float float-delay-2"
-                  style={{ filter: "drop-shadow(0 6px 10px rgba(0,0,0,0.2))" }}
+                  style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
                 />
               </div>
 
-              <div className="absolute -bottom-12 -right-20 w-44 h-26 opacity-88">
+              <div className="absolute -bottom-3 sm:-bottom-6 lg:-bottom-12 -right-5 sm:-right-10 lg:-right-20 w-22 sm:w-33 lg:w-44 h-13 sm:h-19 lg:h-26 opacity-60 sm:opacity-88 hidden sm:block">
                 <CloudImage
                   animationType="float-reverse float-delay-3"
-                  style={{ filter: "drop-shadow(0 6px 10px rgba(0,0,0,0.2))" }}
+                  style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
                 />
               </div>
 
-              {/* Additional side clouds - Animated */}
-              <div className="absolute top-1/2 -left-28 -translate-y-1/2 w-40 h-24 opacity-80">
+              {/* Additional side clouds - Animated - Hidden on mobile */}
+              <div className="absolute top-1/2 -left-7 sm:-left-14 lg:-left-28 -translate-y-1/2 w-20 sm:w-30 lg:w-40 h-12 sm:h-18 lg:h-24 opacity-50 sm:opacity-80 hidden md:block">
                 <CloudImage
                   animationType="gentle-float float-delay-4"
-                  style={{ filter: "drop-shadow(0 6px 10px rgba(0,0,0,0.2))" }}
+                  style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
                 />
               </div>
 
-              <div className="absolute top-1/3 -right-32 w-36 h-22 opacity-75">
+              <div className="absolute top-1/3 -right-8 sm:-right-16 lg:-right-32 w-18 sm:w-27 lg:w-36 h-11 sm:h-16 lg:h-22 opacity-45 sm:opacity-75 hidden md:block">
                 <CloudImage
                   animationType="drift float-delay-1"
-                  style={{ filter: "drop-shadow(0 6px 10px rgba(0,0,0,0.2))" }}
+                  style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
                 />
               </div>
 
-              {/* Single Rocket positioned above the glass card */}
-              <div className="absolute -top-32 left-1/2 transform -translate-x-1/2 w-40 h-52 opacity-90 z-30">
+              {/* Single Rocket positioned above the glass card - Responsive */}
+              <div className="absolute -top-8 sm:-top-16 lg:-top-32 left-1/2 transform -translate-x-1/2 w-16 sm:w-24 lg:w-40 h-20 sm:h-31 lg:h-52 opacity-70 sm:opacity-90 z-30">
                 <RocketImage
                   animationType="rocket-float float-delay-2"
-                  style={{ filter: "drop-shadow(0 8px 15px rgba(0,0,0,0.3))" }}
+                  style={{ filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.3))" }}
                 />
               </div>
 
-              {/* Glass Card */}
-              <div className="relative bg-white/25 backdrop-blur-md rounded-3xl border border-white/50 shadow-2xl w-[450px] h-[450px] overflow-hidden">
+              {/* Glass Card - Responsive */}
+              <div className="relative bg-white/25 backdrop-blur-md rounded-2xl sm:rounded-3xl border border-white/50 shadow-2xl w-[280px] sm:w-[350px] lg:w-[450px] h-[280px] sm:h-[350px] lg:h-[450px] overflow-hidden">
                 {/* Main content */}
-                <div className="flex flex-col items-center justify-center h-full p-10 relative z-20">
+                <div className="flex flex-col items-center justify-center h-full p-6 sm:p-8 lg:p-10 relative z-20">
                   {/* Team illustration */}
-                  <div className="w-64 h-64 mb-8 relative z-10">
+                  <div className="w-32 sm:w-48 lg:w-64 h-32 sm:h-48 lg:h-64 mb-4 sm:mb-6 lg:mb-8 relative z-10">
                     <img
                       src={teamLogo}
                       alt="Spectrum 358 Logo"
@@ -459,48 +472,48 @@ const LoginPage = () => {
                   </div>
 
                   {/* SPECTRUM 358 Text */}
-                  <h2 className="text-white text-4xl font-bold tracking-wider drop-shadow-xl relative z-10">
+                  <h2 className="text-white text-lg sm:text-2xl lg:text-4xl font-bold tracking-wider drop-shadow-xl relative z-10 text-center">
                     SPECTRUM 358
                   </h2>
 
-                  {/* Small clouds inside card - Animated */}
-                  <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-20 h-12 opacity-50">
+                  {/* Small clouds inside card - Animated - Hidden on very small screens */}
+                  <div className="absolute bottom-2 sm:bottom-4 lg:bottom-8 left-1/2 -translate-x-1/2 w-8 sm:w-12 lg:w-20 h-5 sm:h-7 lg:h-12 opacity-30 sm:opacity-50 hidden sm:block">
                     <CloudImage animationType="gentle-float float-delay-2" />
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Foreground Clouds - All Animated */}
+            {/* Foreground Clouds - All Animated - Hidden on mobile for performance */}
             <div
-              className="absolute inset-0 pointer-events-none"
+              className="absolute inset-0 pointer-events-none hidden md:block"
               style={{ zIndex: 20 }}
             >
-              <div className="absolute top-12 right-16 w-32 h-20 opacity-70">
+              <div className="absolute top-3 sm:top-6 lg:top-12 right-4 sm:right-8 lg:right-16 w-16 sm:w-24 lg:w-32 h-10 sm:h-15 lg:h-20 opacity-50 sm:opacity-70">
                 <CloudImage
                   animationType="float-reverse float-delay-1"
-                  style={{ filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.1))" }}
+                  style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.1))" }}
                 />
               </div>
 
-              <div className="absolute bottom-32 right-12 w-36 h-22 opacity-65">
+              <div className="absolute bottom-8 sm:bottom-16 lg:bottom-32 right-3 sm:right-6 lg:right-12 w-18 sm:w-27 lg:w-36 h-11 sm:h-16 lg:h-22 opacity-45 sm:opacity-65">
                 <CloudImage
                   animationType="drift float-delay-3"
-                  style={{ filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.1))" }}
+                  style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.1))" }}
                 />
               </div>
 
-              <div className="absolute bottom-8 left-20 w-40 h-24 opacity-75">
+              <div className="absolute bottom-2 sm:bottom-4 lg:bottom-8 left-5 sm:left-10 lg:left-20 w-20 sm:w-30 lg:w-40 h-12 sm:h-18 lg:h-24 opacity-55 sm:opacity-75">
                 <CloudImage
                   animationType="float-slow float-delay-4"
-                  style={{ filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.1))" }}
+                  style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.1))" }}
                 />
               </div>
 
-              <div className="absolute top-32 left-8 w-28 h-16 opacity-60">
+              <div className="absolute top-8 sm:top-16 lg:top-32 left-2 sm:left-4 lg:left-8 w-14 sm:w-21 lg:w-28 h-8 sm:h-12 lg:h-16 opacity-40 sm:opacity-60">
                 <CloudImage
                   animationType="gentle-float float-delay-2"
-                  style={{ filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.1))" }}
+                  style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.1))" }}
                 />
               </div>
             </div>
