@@ -92,7 +92,7 @@ const TicketManagement = () => {
       <header className="bg-white shadow-sm">
         <div className="flex flex-col sm:flex-row items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex items-center space-x-2 mb-4 sm:mb-0">
-            <svg
+            {/* <svg
               className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600"
               fill="none"
               stroke="currentColor"
@@ -104,7 +104,7 @@ const TicketManagement = () => {
                 strokeWidth={2}
                 d="M4 6h16M4 12h16M4 18h16"
               />
-            </svg>
+            </svg> */}
             <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
               Ticket Management
             </h2>

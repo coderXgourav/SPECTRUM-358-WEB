@@ -102,7 +102,7 @@ const SecuritySettings = () => {
         <div className="flex flex-col sm:flex-row items-center justify-between">
           <div className="flex items-center space-x-2 sm:space-x-4 mb-4 sm:mb-0">
             <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
+  
             </button>
             <h2 className="text-base sm:text-lg lg:text-lg font-medium text-gray-900">Settings</h2>
           </div>

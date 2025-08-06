@@ -21,7 +21,7 @@ const SettingsPage = () => {
       <header className="bg-white border-b border-gray-200">
         <div className="flex flex-col sm:flex-row items-center justify-between px-4 sm:px-6 lg:px-6 py-3">
           <div className="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-0">
-            <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
+    
             <h2 className="text-base sm:text-lg font-medium text-gray-900">Settings</h2>
           </div>
           <div className="flex items-center space-x-2 sm:space-x-4">
