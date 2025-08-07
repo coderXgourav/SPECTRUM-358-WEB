@@ -12,6 +12,8 @@ import {
   Activity,
   FileText,
 } from "lucide-react";
+import { Home } from "lucide-react";
+import Header from "../../components/Header";
 
 const Dashboard = () => {
   const [timeFilter, setTimeFilter] = useState("12 months");
@@ -70,34 +72,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <h2 className="text-lg font-semibold text-gray-800 sm:text-xl">Dashboards</h2>
-          <div className="flex items-center space-x-2 sm:space-x-4">
-            <div className="relative w-full sm:w-auto">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Search..."
-                className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] w-full sm:w-48 lg:w-64 text-sm sm:text-base"
-              />
-            </div>
-            <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
-              <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-            </button>
-            <div className="flex items-center space-x-1 sm:space-x-2 cursor-pointer">
-              <img
-                src="https://ui-avatars.com/api/?name=Martin+Harris&background=E5B700&color=fff"
-                alt="User"
-                className="w-6 h-6 sm:w-8 sm:h-8 rounded-full"
-              />
-              <span className="text-xs sm:text-sm font-medium">Martin Harris</span>
-              <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header title="Dashboards" icon={Home} />
 
       {/* Dashboard Content */}
       <div className="p-4 sm:p-6">
@@ -140,60 +115,82 @@ const Dashboard = () => {
           <div className="lg:col-span-2 space-y-4">
             {/* Onboarding User Chart */}
             <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 border border-gray-200">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-2">
-                <h3 className="text-base sm:text-lg font-semibold">Onboarding User</h3>
+              {/* Header */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3">
+                <h3 className="text-base sm:text-lg font-semibold poppins-semibold">
+                  Onboarding User
+                </h3>
                 <div className="flex items-center space-x-2 mt-2 sm:mt-0">
+                  {/* Time Filters */}
                   <div className="flex items-center bg-white rounded-full p-1 shadow-sm border border-gray-200">
-                    <button
-                      onClick={() => setTimeFilter("12 months")}
-                      className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 min-w-[70px] sm:min-w-[80px] ${
-                        timeFilter === "12 months"
-                          ? "bg-gradient-to-r from-[#E5B700] to-[#DE8806] text-white shadow-md"
-                          : "bg-transparent text-gray-600 hover:text-gray-800"
-                      }`}
-                    >
-                      12 months
-                    </button>
-                    <button
-                      onClick={() => setTimeFilter("30 days")}
-                      className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 min-w-[60px] sm:min-w-[70px] ${
-                        timeFilter === "30 days"
-                          ? "bg-gradient-to-r from-[#E5B700] to-[#DE8806] text-white shadow-md"
-                          : "bg-transparent text-gray-600 hover:text-gray-800"
-                      }`}
-                    >
-                      30 days
-                    </button>
-                    <button
-                      onClick={() => setTimeFilter("7 days")}
-                      className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 min-w-[50px] sm:min-w-[60px] ${
-                        timeFilter === "7 days"
-                          ? "bg-gradient-to-r from-[#E5B700] to-[#DE8806] text-white shadow-md"
-                          : "bg-transparent text-gray-600 hover:text-gray-800"
-                      }`}
-                    >
-                      7 days
-                    </button>
+                    {["12 months", "30 days", "7 days"].map((filter) => (
+                      <button
+                        key={filter}
+                        onClick={() => setTimeFilter(filter)}
+                        className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium poppins-medium transition-all duration-200 min-w-[70px] ${
+                          timeFilter === filter
+                            ? "bg-gradient-to-r from-[#E5B700] to-[#DE8806] text-white shadow-md"
+                            : "bg-transparent text-gray-600 hover:text-gray-800"
+                        }`}
+                      >
+                        {filter}
+                      </button>
+                    ))}
                   </div>
+                  {/* Menu Icon */}
                   <button className="p-2">
                     <MoreVertical className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                   </button>
                 </div>
               </div>
-              <p className="text-xs sm:text-sm text-gray-500 pb-3 mb-4 border-b border-gray-200">
+
+              {/* Subheading */}
+              <p className="text-xs sm:text-sm text-gray-500 mb-4 pb-3 border-b border-gray-200 poppins-regular">
                 Compare spending over time.
               </p>
-              <div className="flex items-center justify-end space-x-4 sm:space-x-6 text-xs sm:text-sm mb-4">
+
+              {/* Legend */}
+              <div className="flex items-center justify-end space-x-4 sm:space-x-6 text-xs sm:text-sm mb-4 poppins-medium">
                 <span className="flex items-center">
                   <span className="w-2 h-2 bg-[#E5B700] rounded-full mr-2"></span>
-                  Total User 12,653
+                  <span
+                    style={{
+                      color: "var(--BG, #FAFAFA)",
+                      fontFeatureSettings: "'ss01' on, 'cv01' on",
+                      fontFamily: "var(--String-2, Poppins)",
+                      fontSize: "0.875rem",
+                      fontStyle: "normal",
+                      fontWeight: 500,
+                      lineHeight: "1.25rem",
+                      letterSpacing: "var(--Letter-Spacing, 0)",
+                    }}
+                  >
+                    Total User 12,653
+                  </span>
                 </span>
                 <span className="flex items-center">
-                  <span className="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
-                  Active User 3,671
+                  <span className="w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
+                  <span
+                    style={{
+                      color: "var(--BG, #FAFAFA)",
+                      fontFeatureSettings: "'ss01' on, 'cv01' on",
+                      fontFamily: "var(--String-2, Poppins)",
+                      fontSize: "0.875rem",
+                      fontStyle: "normal",
+                      fontWeight: 500,
+                      lineHeight: "1.25rem",
+                      letterSpacing: "var(--Letter-Spacing, 0)",
+                    }}
+                  >
+                    Active User 3,671
+                  </span>
                 </span>
               </div>
-              <SimpleLineChart data={chartData} />
+
+              {/* Chart */}
+              <div className="h-[300px] -mt-2">
+                <SimpleLineChart data={chartData} />
+              </div>
             </div>
 
             {/* Bottom Row */}
@@ -234,7 +231,9 @@ const Dashboard = () => {
                       <span className="text-xs text-gray-500">
                         Resolved Rate
                       </span>
-                      <span className="text-xl sm:text-2xl font-bold">+10%</span>
+                      <span className="text-xl sm:text-2xl font-bold">
+                        +10%
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -316,30 +315,135 @@ const Dashboard = () => {
                 <div className="space-y-2">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-xs sm:text-sm">
                     <div className="flex items-center mb-2 sm:mb-0">
-                      <span className="w-3 h-3 bg-[#E5B700] rounded-full mr-2"></span>
-                      <span>Token Revenue</span>
+                      <span
+                        className="w-3 h-3 bg-[#E5B700] rounded-full mr-2"
+                        style={{
+                          width: "1.25rem",
+                          height: "1.25rem",
+                          flexShrink: 0,
+                          aspectRatio: "1/1",
+                        }}
+                      ></span>
+                      <span style={{ color: "white" }}>Token Revenue</span>
                     </div>
                     <div className="flex items-center mb-2 sm:mb-0">
-                      <span className="w-3 h-3 bg-[#FFC107] rounded-full mr-2"></span>
-                      <span>Redeems</span>
+                      <span
+                        className="w-3 h-3 bg-[#FFC107] rounded-full mr-2"
+                        style={{
+                          width: "1.25rem",
+                          height: "1.25rem",
+                          flexShrink: 0,
+                          aspectRatio: "1/1",
+                        }}
+                      ></span>
+                      <span style={{ color: "white" }}>Redeems</span>
                     </div>
                     <div className="flex items-center">
-                      <span className="w-3 h-3 bg-[#FF9800] rounded-full mr-2"></span>
-                      <span>Claimed Revenue</span>
+                      <span
+                        className="w-3 h-3 bg-[#FF9800] rounded-full mr-2"
+                        style={{
+                          width: "1.25rem",
+                          height: "1.25rem",
+                          flexShrink: 0,
+                          aspectRatio: "1/1",
+                        }}
+                      ></span>
+                      <span style={{ color: "white" }}>Claimed Revenue</span>
                     </div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-4 text-xs sm:text-sm">
                     <div>
-                      <p className="text-gray-600">Token Worth</p>
-                      <p className="font-bold">$3,750</p>
+                      <p
+                        className="text-gray-600"
+                        style={{
+                          color: "var(--BG, #FAFAFA)",
+                          fontFeatureSettings: "'ss01' on, 'cv01' on",
+                          fontFamily: "var(--String-2, Poppins)",
+                          fontSize: "0.875rem",
+                          fontStyle: "normal",
+                          fontWeight: 500,
+                          lineHeight: "1.25rem",
+                          letterSpacing: "var(--Letter-Spacing, 0)",
+                        }}
+                      >
+                        Token Worth
+                      </p>
+                      <p
+                        className="font-bold"
+                        style={{
+                          color: "var(--gradient1, #FBCB07)",
+                          fontFamily: "Poppins",
+                          fontSize: "1.5rem",
+                          fontStyle: "normal",
+                          fontWeight: 700,
+                          lineHeight: "2.25rem",
+                          letterSpacing: "0.015rem",
+                        }}
+                      >
+                        $3,750
+                      </p>
                     </div>
                     <div>
-                      <p className="text-gray-600">Token Balance</p>
-                      <p className="font-bold">$5,400</p>
+                      <p
+                        className="text-gray-600"
+                        style={{
+                          color: "var(--BG, #FAFAFA)",
+                          fontFeatureSettings: "'ss01' on, 'cv01' on",
+                          fontFamily: "var(--String-2, Poppins)",
+                          fontSize: "0.875rem",
+                          fontStyle: "normal",
+                          fontWeight: 500,
+                          lineHeight: "1.25rem",
+                          letterSpacing: "var(--Letter-Spacing, 0)",
+                        }}
+                      >
+                        Token Balance
+                      </p>
+                      <p
+                        className="font-bold"
+                        style={{
+                          color: "var(--gradient1, #FBCB07)",
+                          fontFamily: "Poppins",
+                          fontSize: "1.5rem",
+                          fontStyle: "normal",
+                          fontWeight: 700,
+                          lineHeight: "2.25rem",
+                          letterSpacing: "0.015rem",
+                        }}
+                      >
+                        $5,400
+                      </p>
                     </div>
                     <div>
-                      <p className="text-gray-600">Token Earned</p>
-                      <p className="font-bold">$9,100</p>
+                      <p
+                        className="text-gray-600"
+                        style={{
+                          color: "var(--BG, #FAFAFA)",
+                          fontFeatureSettings: "'ss01' on, 'cv01' on",
+                          fontFamily: "var(--String-2, Poppins)",
+                          fontSize: "0.875rem",
+                          fontStyle: "normal",
+                          fontWeight: 500,
+                          lineHeight: "1.25rem",
+                          letterSpacing: "var(--Letter-Spacing, 0)",
+                        }}
+                      >
+                        Token Earned
+                      </p>
+                      <p
+                        className="font-bold"
+                        style={{
+                          color: "var(--gradient1, #FBCB07)",
+                          fontFamily: "Poppins",
+                          fontSize: "1.5rem",
+                          fontStyle: "normal",
+                          fontWeight: 700,
+                          lineHeight: "2.25rem",
+                          letterSpacing: "0.015rem",
+                        }}
+                      >
+                        $9,100
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -352,8 +456,13 @@ const Dashboard = () => {
             {/* Recent Activity */}
             <div className="bg-[#FFFAEF] rounded-xl shadow-sm p-4 sm:p-6 border-2 border-[#E5B700]">
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200">
-                <h3 className="text-base sm:text-lg font-semibold">Recent Activity</h3>
-                <a href="#" className="text-xs sm:text-sm text-[#E5B700] font-medium">
+                <h3 className="text-base sm:text-lg font-semibold">
+                  Recent Activity
+                </h3>
+                <a
+                  href="#"
+                  className="text-xs sm:text-sm text-[#E5B700] font-medium"
+                >
                   View All
                 </a>
               </div>
@@ -369,10 +478,16 @@ const Dashboard = () => {
                       className="w-6 h-6 sm:w-8 sm:h-8 rounded-full"
                     />
                     <div className="flex-1">
-                      <p className="text-xs sm:text-sm font-medium">{notification.user}</p>
-                      <p className="text-xs text-gray-500">{notification.action}</p>
+                      <p className="text-xs sm:text-sm font-medium">
+                        {notification.user}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {notification.action}
+                      </p>
                     </div>
-                    <span className="text-xs text-gray-400">{notification.time}</span>
+                    <span className="text-xs text-gray-400">
+                      {notification.time}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -380,30 +495,42 @@ const Dashboard = () => {
 
             {/* Notifications */}
             <div className="bg-[#FAFAFA] rounded-xl shadow-sm p-4 sm:p-6">
-              <h3 className="text-base sm:text-lg font-semibold mb-4">Notifications</h3>
+              <h3 className="text-base sm:text-lg font-semibold mb-4">
+                Notifications
+              </h3>
               <div className="space-y-3">
                 <NotificationItem
-                  icon={<Bell className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />}
+                  icon={
+                    <Bell className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
+                  }
                   text="You fixed a bug."
                   time="Just now"
                 />
                 <NotificationItem
-                  icon={<Users className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />}
+                  icon={
+                    <Users className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
+                  }
                   text="New user registered."
                   time="59 minutes ago"
                 />
                 <NotificationItem
-                  icon={<Bell className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />}
+                  icon={
+                    <Bell className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
+                  }
                   text="You fixed a bug."
                   time="2 hours ago"
                 />
                 <NotificationItem
-                  icon={<DollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />}
+                  icon={
+                    <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
+                  }
                   text="Andi Lane subscribed to you."
                   time="Today, 11:59 AM"
                 />
                 <NotificationItem
-                  icon={<DollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />}
+                  icon={
+                    <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
+                  }
                   text="Andi Lane subscribed to you."
                   time="Today, 11:59 AM"
                 />
@@ -421,14 +548,15 @@ const StatCard = ({ title, value, icon, bgColor }) => {
   return (
     <div
       className={`${bgColor} rounded-xl p-4 text-white relative overflow-hidden`}
+      style={{ width: "13.75rem", height: "7rem" }}
     >
       <svg
-        width="396"
-        height="406"
+        width="140"
+        height="140"
         viewBox="0 0 396 406"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="absolute bottom-0 right-0 opacity-50 transform scale-75 translate-x-1/4 translate-y-1/4"
+        className="absolute -right-20 top-1/2 -translate-y-1/2 opacity-80"
       >
         <g opacity="0.5">
           <mask
@@ -526,7 +654,19 @@ const StatCard = ({ title, value, icon, bgColor }) => {
         <div className="p-2 bg-white/10 rounded-lg">{icon}</div>
         <div>
           <p className="text-xs opacity-80">{title}</p>
-          <p className="text-lg sm:text-xl font-bold text-[#E5B700]">{value}</p>
+          <p
+            style={{
+              color: "var(--gradient1, #FBCB07)",
+              fontFamily: "Poppins",
+              fontSize: "1.5rem",
+              fontStyle: "normal",
+              fontWeight: 700,
+              lineHeight: "2.25rem",
+              letterSpacing: "0.015rem",
+            }}
+          >
+            {value}
+          </p>
         </div>
       </div>
     </div>
@@ -695,7 +835,12 @@ const DonutChart = () => {
         strokeDashoffset="-264"
         transform="rotate(-90 100 100)"
       />
-      <text x="100" y="90" textAnchor="middle" className="text-xl sm:text-2xl font-bold">
+      <text
+        x="100"
+        y="90"
+        textAnchor="middle"
+        className="text-xl sm:text-2xl font-bold"
+      >
         $9k
       </text>
       <text

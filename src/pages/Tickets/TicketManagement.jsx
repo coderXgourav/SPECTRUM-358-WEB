@@ -11,6 +11,7 @@ import {
   Plus,
   X,
 } from "lucide-react";
+import Header from "../../components/Header";
 
 const TicketManagement = () => {
   const [showNewTicketModal, setShowNewTicketModal] = useState(false);
@@ -87,54 +88,9 @@ const TicketManagement = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="flex flex-col sm:flex-row items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center space-x-2 mb-4 sm:mb-0">
-            {/* <svg
-              className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg> */}
-            <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
-              Ticket Management
-            </h2>
-          </div>
-          <div className="flex items-center space-x-2 sm:space-x-4">
-            <div className="relative w-full sm:w-auto">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
-              <input
-                type="text"
-                placeholder="Search"
-                className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] bg-gray-50 w-full sm:w-48 lg:w-64 text-xs sm:text-sm"
-              />
-            </div>
-            <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
-              <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-            <div className="flex items-center space-x-1 sm:space-x-2">
-              <img
-                src="https://ui-avatars.com/api/?name=Martin+Harris&background=E5B700&color=fff"
-                alt="User"
-                className="w-6 h-6 sm:w-8 sm:h-8 rounded-full"
-              />
-              <span className="text-xs sm:text-sm font-medium">
-                Martin Harris
-              </span>
-              <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header title="Ticket Management" icon={Ticket} />
 
       {/* Main Content */}
       <div className="p-4 sm:p-6 lg:p-8">

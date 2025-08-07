@@ -11,6 +11,7 @@ import {
   XCircle,
   DollarSign,
 } from "lucide-react";
+import Header from "../../components/Header";
 
 const PackageManagement = () => {
   const [showCreatePackageModal, setShowCreatePackageModal] = useState(false);
@@ -45,40 +46,9 @@ const PackageManagement = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="flex flex-col sm:flex-row items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center space-x-2 mb-4 sm:mb-0">
-       
-            <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
-              Package Management
-            </h2>
-          </div>
-          <div className="flex items-center space-x-2 sm:space-x-4">
-            <div className="relative w-full sm:w-auto">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
-              <input
-                type="text"
-                placeholder="Search"
-                className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] bg-gray-50 w-full sm:w-48 lg:w-64 text-xs sm:text-sm"
-              />
-            </div>
-            <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
-              <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-            <div className="flex items-center space-x-1 sm:space-x-2">
-              <img
-                src="https://ui-avatars.com/api/?name=Martin+Harris&background=E5B700&color=fff"
-                alt="User"
-                className="w-6 h-6 sm:w-8 sm:h-8 rounded-full"
-              />
-              <span className="text-xs sm:text-sm font-medium">Martin Harris</span>
-              <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header title="Package Management" icon={DollarSign} />
 
       {/* Package Management Content */}
       <div className="p-4 sm:p-6 lg:p-8">
@@ -87,7 +57,9 @@ const PackageManagement = () => {
           <PackageStatCard
             title="Active Packages"
             value="02"
-            icon={<CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />}
+            icon={
+              <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
+            }
           />
           <PackageStatCard
             title="Expired Packages"
@@ -102,7 +74,9 @@ const PackageManagement = () => {
           <PackageStatCard
             title="Total Package Revenue"
             value="$12,653"
-            icon={<DollarSign className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />}
+            icon={
+              <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
+            }
           />
         </div>
 
@@ -111,7 +85,9 @@ const PackageManagement = () => {
           <div className="p-4 sm:p-6 border-b">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
               <div>
-                <h3 className="text-base sm:text-lg font-semibold">Package Management</h3>
+                <h3 className="text-base sm:text-lg font-semibold">
+                  Package Management
+                </h3>
                 <p className="text-xs sm:text-sm text-gray-600 mt-1">
                   Manage your team members and their account permissions here.
                 </p>
@@ -315,12 +291,12 @@ const PackageStatCard = ({ title, value, icon }) => {
   return (
     <div className="bg-[#011F3F] rounded-lg p-4 sm:p-6 relative overflow-hidden">
       <svg
-        width="396"
-        height="406"
+        width="140"
+        height="140"
         viewBox="0 0 396 406"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="absolute bottom-0 right-0 opacity-50 transform scale-50 sm:scale-75 translate-x-1/4 translate-y-1/4"
+        className="absolute -right-20 top-1/2 -translate-y-1/2 opacity-80"
       >
         <g opacity="0.5">
           <mask
@@ -416,11 +392,15 @@ const PackageStatCard = ({ title, value, icon }) => {
       </svg>
       <div className="flex items-center space-x-3 sm:space-x-4 relative z-10">
         <div className="p-2 bg-white/10 rounded-lg">
-          {React.cloneElement(icon, { className: "w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-[#E5B700]" })}
+          {React.cloneElement(icon, {
+            className: "w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-[#E5B700]",
+          })}
         </div>
         <div>
           <p className="text-white text-xs sm:text-sm opacity-80">{title}</p>
-          <p className="text-[#E5B700] text-lg sm:text-xl lg:text-2xl font-bold">{value}</p>
+          <p className="text-[#E5B700] text-lg sm:text-xl lg:text-2xl font-bold">
+            {value}
+          </p>
         </div>
       </div>
     </div>

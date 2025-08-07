@@ -12,6 +12,7 @@ import {
   Coins,
   X,
 } from "lucide-react";
+import Header from "../../components/Header";
 
 const ReportPage = () => {
   const [activeTab, setActiveTab] = useState("revenue");
@@ -217,56 +218,24 @@ const ReportPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center space-x-2">
-            <Menu 
-              className="w-6 h-6 text-gray-600 cursor-pointer lg:hidden" 
-              onClick={() => setIsMobileMenuOpen(true)}
-            />
-            <h2 className="text-xl font-semibold text-gray-800">Report</h2>
-          </div>
-          <div className="flex items-center space-x-2 sm:space-x-4">
-            {/* Search - Hidden on small screens */}
-            <div className="relative hidden sm:block">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search"
-                className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] bg-gray-50 w-48 lg:w-64"
-              />
-            </div>
-            {/* Mobile search icon */}
-            <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg sm:hidden">
-              <Search className="w-5 h-5" />
-            </button>
-            <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
-              <Bell className="w-5 h-5" />
-            </button>
-            {/* User profile - Simplified on mobile */}
-            <div className="flex items-center space-x-2">
-              <img
-                src="https://ui-avatars.com/api/?name=Martin+Harris&background=E5B700&color=fff"
-                alt="User"
-                className="w-8 h-8 rounded-full"
-              />
-              <span className="text-sm font-medium hidden sm:block">Martin Harris</span>
-              <ChevronDown className="w-4 h-4 text-gray-600 hidden sm:block" />
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header title="Report Page" icon={Download} />
 
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="fixed inset-0 bg-black bg-opacity-50" onClick={() => setIsMobileMenuOpen(false)}></div>
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50"
+            onClick={() => setIsMobileMenuOpen(false)}
+          ></div>
           <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-xl">
             <div className="flex items-center justify-between p-4 border-b">
               <h2 className="text-lg font-semibold">Menu</h2>
-              <X className="w-6 h-6 cursor-pointer" onClick={() => setIsMobileMenuOpen(false)} />
+              <X
+                className="w-6 h-6 cursor-pointer"
+                onClick={() => setIsMobileMenuOpen(false)}
+              />
             </div>
             <div className="p-4">
               <div className="relative mb-4">
@@ -436,7 +405,9 @@ const RevenueTable = ({ transactions }) => {
           <div key={index} className="p-4 border-b last:border-b-0">
             <div className="flex justify-between items-start mb-2">
               <div>
-                <p className="font-medium text-gray-900">{transaction.userName}</p>
+                <p className="font-medium text-gray-900">
+                  {transaction.userName}
+                </p>
                 <p className="text-sm text-gray-600">{transaction.date}</p>
               </div>
               <span
@@ -455,7 +426,9 @@ const RevenueTable = ({ transactions }) => {
               </div>
               <div>
                 <span className="text-gray-500">ID: </span>
-                <span className="text-gray-900 text-xs">{transaction.transactionId}</span>
+                <span className="text-gray-900 text-xs">
+                  {transaction.transactionId}
+                </span>
               </div>
               <div>
                 <span className="text-gray-500">Gross: </span>
@@ -586,12 +559,18 @@ const TokenTable = ({ transactions }) => {
           <div key={index} className="p-4 border-b last:border-b-0">
             <div className="flex justify-between items-start mb-2">
               <div>
-                <p className="font-medium text-gray-900">{transaction.userName}</p>
-                <p className="text-sm text-gray-600">{transaction.date} {transaction.time}</p>
+                <p className="font-medium text-gray-900">
+                  {transaction.userName}
+                </p>
+                <p className="text-sm text-gray-600">
+                  {transaction.date} {transaction.time}
+                </p>
               </div>
               <div className="text-right">
                 <span
-                  className={`text-sm font-medium ${getTokenStyle(transaction.tokens)}`}
+                  className={`text-sm font-medium ${getTokenStyle(
+                    transaction.tokens
+                  )}`}
                 >
                   {transaction.tokens}
                 </span>
@@ -618,7 +597,9 @@ const TokenTable = ({ transactions }) => {
               </div>
               <div className="col-span-2">
                 <span className="text-gray-500">ID: </span>
-                <span className="text-gray-900 text-xs">{transaction.transactionId}</span>
+                <span className="text-gray-900 text-xs">
+                  {transaction.transactionId}
+                </span>
               </div>
             </div>
           </div>
@@ -759,18 +740,26 @@ const UserTable = ({ users }) => {
             <div className="space-y-2 text-sm">
               <div>
                 <span className="text-gray-500">Renewal: </span>
-                <span className="text-gray-900 text-xs">{user.renewalDate}</span>
+                <span className="text-gray-900 text-xs">
+                  {user.renewalDate}
+                </span>
               </div>
               <div className="flex justify-between">
                 <div>
                   <span className="text-gray-500">Earned: </span>
-                  <span className={`font-medium ${getTokenStyle(user.tokenEarned)}`}>
+                  <span
+                    className={`font-medium ${getTokenStyle(user.tokenEarned)}`}
+                  >
                     {user.tokenEarned}
                   </span>
                 </div>
                 <div>
                   <span className="text-gray-500">Redeemed: </span>
-                  <span className={`font-medium ${getTokenStyle(user.tokenRedeemed)}`}>
+                  <span
+                    className={`font-medium ${getTokenStyle(
+                      user.tokenRedeemed
+                    )}`}
+                  >
                     {user.tokenRedeemed}
                   </span>
                 </div>
@@ -859,12 +848,12 @@ const StatCard = ({ title, value, icon }) => {
   return (
     <div className="bg-[#011F3F] rounded-lg p-4 sm:p-6 text-white relative overflow-hidden">
       <svg
-        width="396"
-        height="406"
+        width="140"
+        height="140"
         viewBox="0 0 396 406"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="absolute bottom-0 right-0 opacity-50 transform scale-50 sm:scale-75 translate-x-1/4 translate-y-1/4"
+        className="absolute -right-20 top-1/2 -translate-y-1/2 opacity-80"
       >
         <g opacity="0.5">
           <mask
@@ -960,11 +949,15 @@ const StatCard = ({ title, value, icon }) => {
       </svg>
       <div className="flex items-center space-x-3 sm:space-x-4 relative z-10">
         <div className="p-2 bg-white/10 rounded-lg flex-shrink-0">
-          {React.cloneElement(icon, { className: "w-5 h-5 sm:w-6 sm:h-6 text-[#E5B700]" })}
+          {React.cloneElement(icon, {
+            className: "w-5 h-5 sm:w-6 sm:h-6 text-[#E5B700]",
+          })}
         </div>
         <div className="min-w-0">
           <p className="text-white text-sm opacity-80 truncate">{title}</p>
-          <p className="text-[#E5B700] text-xl sm:text-2xl font-bold">{value}</p>
+          <p className="text-[#E5B700] text-xl sm:text-2xl font-bold">
+            {value}
+          </p>
         </div>
       </div>
     </div>
