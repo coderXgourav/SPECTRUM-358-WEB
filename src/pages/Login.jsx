@@ -3,7 +3,7 @@ import teamLogo from "../../src/assets/Spectrum3581.png";
 import cloudImage from "../../src/assets/Asset4@4x3_2.png";
 import rocketImage from "../../src/assets/Saly-43@2x.png";
 
-import "../styles/animations.css";
+
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
