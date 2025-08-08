@@ -241,8 +241,9 @@ const LoginPage = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="example@email.com"
-                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm sm:text-base"
+                  placeholder="Enter Email address"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm sm:text-base"
+                  style={{ borderRadius: "1.625rem" }}
                 />
               </div>
 
@@ -257,7 +258,8 @@ const LoginPage = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••••••"
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent pr-10 text-sm sm:text-base"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent pr-10 text-sm sm:text-base"
+                    style={{ borderRadius: "1.625rem" }}
                   />
                   <button
                     type="button"
@@ -312,9 +314,10 @@ const LoginPage = () => {
               <button
                 type="submit"
                 onClick={handleSubmit}
-                className="w-full py-2.5 sm:py-3 px-4 text-white font-semibold rounded-lg hover:opacity-90 transition duration-200 text-sm sm:text-base"
+                className="w-full py-2.5 sm:py-3 px-4 text-white font-semibold hover:opacity-90 transition duration-200 text-sm sm:text-base"
                 style={{
                   background: "linear-gradient(to right, #E5B700, #DE8806)",
+                  borderRadius: "1.625rem",
                 }}
               >
                 Login
@@ -336,7 +339,8 @@ const LoginPage = () => {
               <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
                 <button
                   type="button"
-                  className="flex-1 flex items-center justify-center px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition duration-200 font-medium text-sm sm:text-base"
+                  className="flex-1 flex items-center justify-center px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-900 text-white hover:bg-gray-800 transition duration-200 font-medium text-sm sm:text-base"
+                  style={{ borderRadius: "1.625rem" }}
                 >
                   <svg
                     className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
@@ -363,7 +367,8 @@ const LoginPage = () => {
                 </button>
                 <button
                   type="button"
-                  className="flex-1 flex items-center justify-center px-3 sm:px-4 py-2.5 sm:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200 font-medium text-sm sm:text-base"
+                  className="flex-1 flex items-center justify-center px-3 sm:px-4 py-2.5 sm:py-3 bg-blue-600 text-white hover:bg-blue-700 transition duration-200 font-medium text-sm sm:text-base"
+                  style={{ borderRadius: "1.625rem" }}
                 >
                   <svg
                     className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
@@ -417,7 +422,7 @@ const LoginPage = () => {
               <div className="absolute -top-8 -left-12 w-24 lg:w-32 h-14 lg:h-18">
                 <CloudImage animationType="gentle-float float-delay-3" />
               </div>
-              
+
               {/* Bottom center cloud behind card */}
               <div className="absolute top-16 left-8 w-20 lg:w-26 h-12 lg:h-16">
                 <CloudImage animationType="float-slow float-delay-4" />
@@ -428,7 +433,7 @@ const LoginPage = () => {
           {/* Main Card Container */}
           <div className="relative z-10">
             {/* Clouds positioned exactly like your reference image */}
-            
+
             {/* Top left cloud - positioned like in your image */}
             <div className="absolute -top-16 -left-20 w-28 lg:w-36 h-17 lg:h-22">
               <CloudImage
