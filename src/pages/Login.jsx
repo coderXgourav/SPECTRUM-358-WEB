@@ -21,7 +21,7 @@ const LoginPage = () => {
     }
   };
 
-  // Cloud image component with animation
+  // Cloud image component with animation - Clear/Opaque clouds
   const CloudImage = ({
     className = "",
     style = {},
@@ -51,7 +51,7 @@ const LoginPage = () => {
 
   return (
     <>
-      {/* CSS Animations - Add this to your animations.css file */}
+      {/* CSS Animations */}
       <style jsx>{`
         @keyframes float {
           0%,
@@ -379,96 +379,126 @@ const LoginPage = () => {
           </div>
         </div>
 
-        {/* Right Section - Illustration with Animated Clouds - Hidden on Mobile */}
+        {/* Right Section - Illustration with Clear Animated Clouds */}
         <div
           className="hidden md:flex w-full md:w-1/2 relative overflow-hidden items-center justify-center min-h-[400px] lg:min-h-0"
           style={{
             background: "linear-gradient(135deg, #E5B700 0%, #DE8806 100%)",
           }}
         >
-          {/* Background Clouds Layer - Animated - Hidden on small screens */}
+          {/* Background Clouds Layer - Clear/Opaque */}
           <div className="absolute inset-0 hidden md:block">
             {/* Top left cloud */}
-            <div className="absolute top-2 sm:top-8 left-3 sm:left-12 w-16 sm:w-24 lg:w-32 h-10 sm:h-15 lg:h-20 opacity-40">
+            <div className="absolute top-8 left-12 w-24 lg:w-32 h-15 lg:h-20">
               <CloudImage animationType="float float-delay-1" />
             </div>
 
             {/* Top right cloud */}
-            <div className="absolute top-4 sm:top-16 right-2 sm:right-8 w-18 sm:w-27 lg:w-36 h-11 sm:h-16 lg:h-22 opacity-35">
+            <div className="absolute top-16 right-8 w-27 lg:w-36 h-16 lg:h-22">
               <CloudImage animationType="float-slow float-delay-2" />
             </div>
 
             {/* Bottom left cloud */}
-            <div className="absolute bottom-5 sm:bottom-20 left-4 sm:left-16 w-20 sm:w-30 lg:w-40 h-12 sm:h-18 lg:h-24 opacity-30">
+            <div className="absolute bottom-20 left-16 w-30 lg:w-40 h-18 lg:h-24">
               <CloudImage animationType="drift float-delay-3" />
             </div>
 
             {/* Bottom right cloud */}
-            <div className="absolute bottom-3 sm:bottom-12 right-5 sm:right-20 w-14 sm:w-21 lg:w-28 h-8 sm:h-12 lg:h-16 opacity-40">
+            <div className="absolute bottom-12 right-20 w-21 lg:w-28 h-12 lg:h-16">
               <CloudImage animationType="float-reverse float-delay-4" />
+            </div>
+          </div>
+
+          {/* Clouds positioned behind the card (will show through transparent card) */}
+          <div className="absolute inset-0 z-5">
+            {/* Behind card clouds - positioned to show through transparent card */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+              {/* Center cloud behind card */}
+              <div className="absolute -top-8 -left-12 w-24 lg:w-32 h-14 lg:h-18">
+                <CloudImage animationType="gentle-float float-delay-3" />
+              </div>
+              
+              {/* Bottom center cloud behind card */}
+              <div className="absolute top-16 left-8 w-20 lg:w-26 h-12 lg:h-16">
+                <CloudImage animationType="float-slow float-delay-4" />
+              </div>
             </div>
           </div>
 
           {/* Main Card Container */}
           <div className="relative z-10">
-            {/* Clouds around the card - All Animated - Hidden on mobile */}
-            <div className="absolute -top-4 md:-top-8 lg:-top-16 -left-5 md:-left-10 lg:-left-20 w-24 md:w-36 lg:w-48 h-14 md:h-21 lg:h-28 opacity-60 md:opacity-90 hidden md:block">
+            {/* Clouds positioned exactly like your reference image */}
+            
+            {/* Top left cloud - positioned like in your image */}
+            <div className="absolute -top-16 -left-20 w-28 lg:w-36 h-17 lg:h-22">
               <CloudImage
                 animationType="drift"
                 style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
               />
             </div>
 
-            <div className="absolute -top-2 md:-top-4 lg:-top-8 -right-6 md:-right-12 lg:-right-24 w-26 md:w-39 lg:w-52 h-16 md:h-24 lg:h-32 opacity-55 md:opacity-85 hidden md:block">
+            {/* Top right cloud - positioned like in your image */}
+            <div className="absolute -top-12 -right-24 w-32 lg:w-42 h-19 lg:h-25">
               <CloudImage
                 animationType="float-slow float-delay-1"
                 style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
               />
             </div>
 
-            <div className="absolute -bottom-5 md:-bottom-10 lg:-bottom-20 -left-4 md:-left-8 lg:-left-16 w-28 md:w-42 lg:w-56 h-17 md:h-25 lg:h-34 opacity-65 md:opacity-95 hidden md:block">
-              <CloudImage
-                animationType="float float-delay-2"
-                style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
-              />
-            </div>
-
-            <div className="absolute -bottom-3 md:-bottom-6 lg:-bottom-12 -right-5 md:-right-10 lg:-right-20 w-22 md:w-33 lg:w-44 h-13 md:h-19 lg:h-26 opacity-60 md:opacity-88 hidden md:block">
-              <CloudImage
-                animationType="float-reverse float-delay-3"
-                style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
-              />
-            </div>
-
-            {/* Additional side clouds - Animated - Hidden on mobile */}
-            <div className="absolute top-1/2 -left-7 md:-left-14 lg:-left-28 -translate-y-1/2 w-20 md:w-30 lg:w-40 h-12 md:h-18 lg:h-24 opacity-50 md:opacity-80 hidden md:block">
+            {/* Left side cloud - positioned like in your image */}
+            <div className="absolute top-1/2 -left-24 -translate-y-1/2 w-24 lg:w-32 h-14 lg:h-18">
               <CloudImage
                 animationType="gentle-float float-delay-4"
                 style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
               />
             </div>
 
-            <div className="absolute top-1/3 -right-8 md:-right-16 lg:-right-32 w-18 md:w-27 lg:w-36 h-11 md:h-16 lg:h-22 opacity-45 md:opacity-75 hidden md:block">
+            {/* Right side cloud - positioned like in your image */}
+            <div className="absolute top-1/3 -right-20 w-22 lg:w-28 h-13 lg:h-17">
               <CloudImage
                 animationType="drift float-delay-1"
                 style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
               />
             </div>
 
-            {/* Single Rocket positioned above the glass card - Responsive */}
-            <div className="absolute -top-8 md:-top-16 lg:-top-32 left-1/2 transform -translate-x-1/2 w-16 md:w-24 lg:w-40 h-20 md:h-31 lg:h-52 opacity-70 md:opacity-90 z-30">
+            {/* Bottom left cloud - positioned like in your image */}
+            <div className="absolute -bottom-18 -left-16 w-34 lg:w-44 h-20 lg:h-26">
+              <CloudImage
+                animationType="float float-delay-2"
+                style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
+              />
+            </div>
+
+            {/* Bottom right cloud - positioned like in your image */}
+            <div className="absolute -bottom-14 -right-18 w-26 lg:w-34 h-16 lg:h-20">
+              <CloudImage
+                animationType="float-reverse float-delay-3"
+                style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
+              />
+            </div>
+
+            {/* Small top cloud - like in your image */}
+            <div className="absolute -top-8 left-1/4 w-16 lg:w-20 h-10 lg:h-12">
+              <CloudImage
+                animationType="float-slow float-delay-3"
+                style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.15))" }}
+              />
+            </div>
+
+            {/* Rocket positioned above the glass card */}
+            <div className="absolute -top-24 left-1/2 transform -translate-x-1/2 w-18 lg:w-28 h-22 lg:h-35 z-30">
               <RocketImage
                 animationType="rocket-float float-delay-2"
                 style={{ filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.3))" }}
               />
             </div>
 
-            {/* Glass Card - Responsive */}
-            <div className="relative bg-white/25 backdrop-blur-md rounded-2xl md:rounded-3xl border border-white/50 shadow-2xl w-[280px] md:w-[350px] lg:w-[450px] h-[280px] md:h-[350px] lg:h-[450px] overflow-hidden">
+            {/* Glass Card - More transparent to show clouds behind */}
+            <div className="relative bg-white/15 backdrop-blur-sm rounded-3xl border border-white/30 shadow-2xl w-[350px] lg:w-[450px] h-[350px] lg:h-[450px] overflow-visible">
               {/* Main content */}
-              <div className="flex flex-col items-center justify-center h-full p-6 md:p-8 lg:p-10 relative z-20">
+              <div className="flex flex-col items-center justify-center h-full p-8 lg:p-10 relative z-20">
                 {/* Team illustration */}
-                <div className="w-32 md:w-48 lg:w-64 h-32 md:h-48 lg:h-64 mb-4 md:mb-6 lg:mb-8 relative z-10">
+                <div className="w-48 lg:w-64 h-48 lg:h-64 mb-6 lg:mb-8 relative z-10">
                   <img
                     src={teamLogo}
                     alt="Spectrum 358 Logo"
@@ -477,45 +507,49 @@ const LoginPage = () => {
                 </div>
 
                 {/* SPECTRUM 358 Text */}
-                <h2 className="text-white text-lg md:text-2xl lg:text-4xl font-bold tracking-wider drop-shadow-xl relative z-10 text-center">
+                <h2 className="text-white text-2xl lg:text-4xl font-bold tracking-wider drop-shadow-xl relative z-10 text-center">
                   SPECTRUM 358
                 </h2>
 
-                {/* Small clouds inside card - Animated - Hidden on very small screens */}
-                <div className="absolute bottom-2 md:bottom-4 lg:bottom-8 left-1/2 -translate-x-1/2 w-8 md:w-12 lg:w-20 h-5 md:h-7 lg:h-12 opacity-30 md:opacity-50 hidden md:block">
+                {/* Small cloud inside card bottom - positioned like in your image */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-14 lg:w-18 h-8 lg:h-11">
                   <CloudImage animationType="gentle-float float-delay-2" />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Foreground Clouds - All Animated - Hidden on mobile for performance */}
+          {/* Foreground Clouds - All Clear/Opaque */}
           <div
             className="absolute inset-0 pointer-events-none hidden md:block"
             style={{ zIndex: 20 }}
           >
-            <div className="absolute top-3 md:top-6 lg:top-12 right-4 md:right-8 lg:right-16 w-16 md:w-24 lg:w-32 h-10 md:h-15 lg:h-20 opacity-50 md:opacity-70">
+            {/* Top right foreground cloud */}
+            <div className="absolute top-8 right-12 w-22 lg:w-28 h-13 lg:h-17">
               <CloudImage
                 animationType="float-reverse float-delay-1"
                 style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.1))" }}
               />
             </div>
 
-            <div className="absolute bottom-8 md:bottom-16 lg:bottom-32 right-3 md:right-6 lg:right-12 w-18 md:w-27 lg:w-36 h-11 md:h-16 lg:h-22 opacity-45 md:opacity-65">
+            {/* Bottom right foreground cloud */}
+            <div className="absolute bottom-24 right-8 w-26 lg:w-34 h-16 lg:h-20">
               <CloudImage
                 animationType="drift float-delay-3"
                 style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.1))" }}
               />
             </div>
 
-            <div className="absolute bottom-2 md:bottom-4 lg:bottom-8 left-5 md:left-10 lg:left-20 w-20 md:w-30 lg:w-40 h-12 md:h-18 lg:h-24 opacity-55 md:opacity-75">
+            {/* Bottom left foreground cloud */}
+            <div className="absolute bottom-6 left-16 w-28 lg:w-36 h-17 lg:h-22">
               <CloudImage
                 animationType="float-slow float-delay-4"
                 style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.1))" }}
               />
             </div>
 
-            <div className="absolute top-8 md:top-16 lg:top-32 left-2 md:left-4 lg:left-8 w-14 md:w-21 lg:w-28 h-8 md:h-12 lg:h-16 opacity-40 md:opacity-60">
+            {/* Top left foreground cloud */}
+            <div className="absolute top-20 left-6 w-20 lg:w-26 h-12 lg:h-16">
               <CloudImage
                 animationType="gentle-float float-delay-2"
                 style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.1))" }}

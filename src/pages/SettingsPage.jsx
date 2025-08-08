@@ -13,7 +13,7 @@ const SettingsPage = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <Header title="Settings" icon={Menu} />
+      <Header title="Profile" icon={Menu} />
 
       {/* Profile Content */}
       <div className="p-4 sm:p-6 lg:p-6">
@@ -25,20 +25,7 @@ const SettingsPage = () => {
               style={{
                 background: "linear-gradient(to right, #FFE88B, #C8A000)",
               }}
-            >
-              {/* Language Selector */}
-              <div className="absolute top-3 sm:top-4 right-3 sm:right-4">
-                <div className="relative">
-                  <select className="bg-white/20 backdrop-blur-sm text-gray-700 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm border border-white/30 pr-8 appearance-none cursor-pointer">
-                    <option>Language</option>
-                    <option>English</option>
-                    <option>Spanish</option>
-                    <option>French</option>
-                  </select>
-                  <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-3 h-3 sm:w-4 sm:h-4 text-gray-700 pointer-events-none" />
-                </div>
-              </div>
-            </div>
+            ></div>
 
             {/* Profile Info Section */}
             <div className="px-4 sm:px-6 lg:px-8 -mt-10 sm:-mt-12">
@@ -57,6 +44,17 @@ const SettingsPage = () => {
                   <p className="text-xs sm:text-sm text-gray-600">
                     {profileData.email}
                   </p>
+                </div>
+                <div className="flex items-center">
+                  <div className="relative">
+                    <select className="bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-full text-sm pr-10 appearance-none cursor-pointer min-w-[120px]">
+                      <option>Language</option>
+                      <option>English</option>
+                      <option>Spanish</option>
+                      <option>French</option>
+                    </select>
+                    <ChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                  </div>
                 </div>
               </div>
             </div>

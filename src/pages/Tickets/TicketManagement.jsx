@@ -10,6 +10,8 @@ import {
   XCircle,
   Plus,
   X,
+  Edit,
+  Trash2,
 } from "lucide-react";
 import Header from "../../components/Header";
 
@@ -87,15 +89,28 @@ const TicketManagement = () => {
     }
   };
 
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case "High":
+        return "text-red-600";
+      case "Medium":
+        return "text-yellow-600";
+      case "Low":
+        return "text-green-600";
+      default:
+        return "text-gray-600";
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
       <Header title="Ticket Management" icon={Ticket} />
 
       {/* Main Content */}
-      <div className="p-4 sm:p-6 lg:p-8">
+      <div className="p-3 sm:p-4 md:p-6 lg:p-8">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-4 sm:mb-6 lg:mb-8">
           <TicketStatCard
             title="Total Ticket"
             value="10,653"
@@ -124,21 +139,21 @@ const TicketManagement = () => {
           />
         </div>
 
-        {/* Ticket Table */}
+        {/* Ticket Table/Cards */}
         <div className="bg-white rounded-lg shadow">
-          <div className="p-4 sm:p-6 border-b">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
+          <div className="p-3 sm:p-4 md:p-6 border-b">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
               <div>
-                <h3 className="text-base sm:text-lg font-semibold">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-semibold">
                   Ticket Management
                 </h3>
-                <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                <p className="text-sm sm:text-base text-gray-600 mt-1">
                   Manage your team members and their account permissions here.
                 </p>
               </div>
               <button
                 onClick={() => setShowNewTicketModal(true)}
-                className="flex items-center px-3 sm:px-4 py-2 bg-gradient-to-r from-[#E5B700] to-[#DE8806] text-white rounded-lg text-xs sm:text-sm font-medium hover:opacity-90 transition-opacity mt-2 sm:mt-0"
+                className="flex items-center px-4 py-2 bg-gradient-to-r from-[#E5B700] to-[#DE8806] text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity w-full sm:w-auto justify-center"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 New Ticket
@@ -146,29 +161,30 @@ const TicketManagement = () => {
             </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[640px]">
+          {/* Desktop Table View */}
+          <div className="hidden lg:block overflow-x-auto">
+            <table className="w-full">
               <thead>
                 <tr className="border-b bg-gray-50">
-                  <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Ticket ID
                   </th>
-                  <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Subject
                   </th>
-                  <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Priority
                   </th>
-                  <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Last Update
                   </th>
-                  <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Assign To
                   </th>
-                  <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Action
                   </th>
                 </tr>
@@ -176,40 +192,42 @@ const TicketManagement = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {tickets.map((ticket, index) => (
                   <tr key={index} className="hover:bg-gray-50">
-                    <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {ticket.id}
                     </td>
-                    <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {ticket.subject}
                     </td>
-                    <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <span
-                          className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
                             ticket.status
                           )}`}
                         >
                           <span className="w-2 h-2 rounded-full bg-current mr-2"></span>
                           {ticket.status}
                         </span>
-                        <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 ml-2 text-gray-400" />
+                        <ChevronDown className="w-4 h-4 ml-2 text-gray-400" />
                       </div>
                     </td>
-                    <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                      <div className="flex items-center text-xs sm:text-sm text-gray-900">
-                        {ticket.priority}
-                        <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 ml-2 text-gray-400" />
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center text-sm text-gray-900">
+                        <span className={getPriorityColor(ticket.priority)}>
+                          {ticket.priority}
+                        </span>
+                        <ChevronDown className="w-4 h-4 ml-2 text-gray-400" />
                       </div>
                     </td>
-                    <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {ticket.lastUpdate}
                     </td>
-                    <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {ticket.assignee}
                     </td>
-                    <td className="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <button className="text-gray-400 hover:text-gray-600">
-                        <MoreVertical className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <MoreVertical className="w-5 h-5" />
                       </button>
                     </td>
                   </tr>
@@ -217,12 +235,99 @@ const TicketManagement = () => {
               </tbody>
             </table>
           </div>
+
+          {/* Tablet View */}
+          <div className="hidden md:block lg:hidden">
+            <div className="divide-y divide-gray-200">
+              {tickets.map((ticket, index) => (
+                <div key={ticket.id} className="p-4 hover:bg-gray-50">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h4 className="text-sm font-medium text-gray-900">{ticket.id}</h4>
+                        <span
+                          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                            ticket.status
+                          )}`}
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-current mr-1"></span>
+                          {ticket.status}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-900 mb-1">{ticket.subject}</p>
+                      <div className="flex items-center gap-4 text-xs text-gray-600">
+                        <span className={`font-medium ${getPriorityColor(ticket.priority)}`}>
+                          {ticket.priority} Priority
+                        </span>
+                        <span>Updated: {ticket.lastUpdate}</span>
+                      </div>
+                    </div>
+                    <button className="text-gray-400 hover:text-gray-600">
+                      <MoreVertical className="w-4 h-4" />
+                    </button>
+                  </div>
+                  
+                  <div className="flex items-center justify-between text-xs text-gray-600">
+                    <span>Assigned to: <span className="font-medium text-gray-900">{ticket.assignee}</span></span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Mobile View */}
+          <div className="block md:hidden">
+            <div className="divide-y divide-gray-200">
+              {tickets.map((ticket, index) => (
+                <div key={ticket.id} className="p-3">
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <h4 className="text-sm font-medium text-gray-900">{ticket.id}</h4>
+                        <button className="text-gray-400 hover:text-gray-600">
+                          <MoreVertical className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span
+                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
+                            ticket.status
+                          )}`}
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-current mr-1"></span>
+                          {ticket.status}
+                        </span>
+                        <span className={`text-xs font-medium ${getPriorityColor(ticket.priority)}`}>
+                          {ticket.priority}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-1 text-xs text-gray-600">
+                    <div className="flex justify-between">
+                      <span className="font-medium">Subject:</span>
+                      <span className="text-gray-900 text-right max-w-[60%]">{ticket.subject}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium">Last Update:</span>
+                      <span className="text-gray-900">{ticket.lastUpdate}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium">Assigned to:</span>
+                      <span className="text-gray-900">{ticket.assignee}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
       {/* New Ticket Modal */}
       {showNewTicketModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 sm:px-0">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           {/* Backdrop with blur */}
           <div
             className="absolute inset-0 bg-black/30 backdrop-blur-sm"
@@ -230,110 +335,126 @@ const TicketManagement = () => {
           />
 
           {/* Modal */}
-          <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-lg sm:max-w-xl lg:max-w-2xl mx-4">
+          <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-2xl max-h-[90vh] overflow-y-auto">
             {/* Close button */}
             <button
               onClick={() => setShowNewTicketModal(false)}
-              className="absolute right-4 sm:right-6 top-4 sm:top-6 text-gray-400 hover:text-gray-600 transition-colors"
+              className="absolute right-4 top-4 z-10 text-gray-400 hover:text-gray-600 transition-colors bg-white rounded-full p-1"
             >
-              <X className="w-4 h-4 sm:w-5 sm:h-5" />
+              <X className="w-5 h-5" />
             </button>
 
             <div className="p-4 sm:p-6 lg:p-8">
               {/* Header */}
-              <div className="mb-4 sm:mb-6">
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
+              <div className="mb-6">
+                <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">
                   New Ticket
                 </h2>
-                <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                  Update your photo and personal details.
+                <p className="text-sm text-gray-500 mt-1">
+                  Create a new support ticket with the details below.
                 </p>
               </div>
 
               {/* Form */}
-              <div className="space-y-4 sm:space-y-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-1.5">
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
                       Ticket ID*
                     </label>
                     <input
                       type="text"
-                      placeholder="Ticket ID"
-                      className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-xs sm:text-sm"
+                      placeholder="Enter Ticket ID"
+                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-1.5">
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
                       Subject*
                     </label>
                     <input
                       type="text"
-                      placeholder="Subject"
-                      className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-xs sm:text-sm"
+                      placeholder="Enter Subject"
+                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-1.5">
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
                       Status*
                     </label>
                     <div className="relative">
-                      <select className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-400 text-xs sm:text-sm">
-                        <option>Select Status</option>
+                      <select className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-900 text-sm">
+                        <option value="">Select Status</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Resolved">Resolved</option>
+                        <option value="Closed">Closed</option>
                       </select>
-                      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-3 h-3 sm:w-4 sm:h-4 text-gray-400 pointer-events-none" />
+                      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-1.5">
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
                       Priority*
                     </label>
                     <div className="relative">
-                      <select className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-400 text-xs sm:text-sm">
-                        <option>Select Priority</option>
+                      <select className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-900 text-sm">
+                        <option value="">Select Priority</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
                       </select>
-                      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-3 h-3 sm:w-4 sm:h-4 text-gray-400 pointer-events-none" />
+                      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                     </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-1.5">
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
                       Last Update
                     </label>
                     <input
-                      type="text"
-                      placeholder="Last Update"
-                      className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-xs sm:text-sm"
+                      type="date"
+                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent text-sm"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-1.5">
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
                       Assign To
                     </label>
                     <input
                       type="text"
-                      placeholder="Assign To"
-                      className="w-full px-3 py-2 sm:px-3.5 sm:py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-xs sm:text-sm"
+                      placeholder="Enter Assignee Name"
+                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
                     />
                   </div>
                 </div>
 
-                <div className="flex gap-3 pt-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    Description
+                  </label>
+                  <textarea
+                    rows="4"
+                    placeholder="Enter ticket description..."
+                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm resize-none"
+                  ></textarea>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3 pt-4">
                   <button
                     type="button"
-                    className="flex-1 py-2 sm:py-2.5 bg-[#F5A623] text-white font-medium rounded-lg hover:bg-[#E59613] transition-colors text-xs sm:text-sm"
+                    className="flex-1 py-2.5 bg-[#F5A623] text-white font-medium rounded-lg hover:bg-[#E59613] transition-colors text-sm order-2 sm:order-1"
                   >
                     Submit
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowNewTicketModal(false)}
-                    className="flex-1 py-2 sm:py-2.5 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 transition-colors text-xs sm:text-sm"
+                    className="flex-1 py-2.5 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 transition-colors text-sm order-1 sm:order-2"
                   >
                     Cancel
                   </button>
@@ -347,22 +468,20 @@ const TicketManagement = () => {
   );
 };
 
-// Fixed Ticket Stat Card Component with proper SVG positioning
+// Ticket Stat Card Component - Made responsive
 const TicketStatCard = ({ title, value, icon, iconBgColor }) => {
   return (
-    <div className="bg-[#011F3F] rounded-lg p-4 sm:p-6 relative overflow-hidden">
-      {/* SVG Background Pattern - Fixed positioning */}
+    <div className="bg-[#011F3F] rounded-lg p-3 sm:p-4 lg:p-6 relative overflow-hidden h-20 sm:h-24 lg:h-28">
+      {/* SVG Background Pattern */}
       <svg
         width="140"
         height="140"
         viewBox="0 0 396 406"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="absolute -right-20 top-1/2 -translate-y-1/2 opacity-80" // Changed opacity from 0.5 to 0.8
+        className="absolute -right-16 sm:-right-20 top-1/2 -translate-y-1/2 opacity-80"
       >
         <g opacity="0.8">
-          {" "}
-          {/* Adjusted group opacity */}
           <mask
             id="mask0_1560_15760"
             style={{ maskType: "alpha" }}
@@ -456,15 +575,15 @@ const TicketStatCard = ({ title, value, icon, iconBgColor }) => {
       </svg>
 
       {/* Content */}
-      <div className="flex items-center space-x-3 sm:space-x-4 relative z-10">
-        <div className="p-2 bg-white/10 rounded-lg">
+      <div className="flex items-center space-x-2 sm:space-x-3 lg:space-x-4 relative z-10">
+        <div className="p-1.5 sm:p-2 bg-white/10 rounded-lg">
           {React.cloneElement(icon, {
             className: "w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-[#E5B700]",
           })}
         </div>
         <div>
           <p className="text-white text-xs sm:text-sm opacity-80">{title}</p>
-          <p className="text-[#E5B700] text-lg sm:text-xl lg:text-2xl font-bold">
+          <p className="text-[#E5B700] text-sm sm:text-lg lg:text-xl xl:text-2xl font-bold">
             {value}
           </p>
         </div>
