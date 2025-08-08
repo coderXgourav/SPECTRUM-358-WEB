@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import teamLogo from "../../src/assets/Spectrum3581.png";
 import cloudImage from "../../src/assets/Asset4@4x3_2.png";
 import rocketImage from "../../src/assets/Saly-43@2x.png";
@@ -10,6 +10,28 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [rocketLaunched, setRocketLaunched] = useState(false);
+  const [cloudsParting, setCloudsParting] = useState({});
+
+  useEffect(() => {
+    // Start rocket launch animation on page load
+    const launchTimer = setTimeout(() => {
+      setRocketLaunched(true);
+    }, 100);
+
+    // Trigger cloud parting effects at specific times during rocket ascent
+    const cloudTimers = [
+      setTimeout(() => setCloudsParting(prev => ({ ...prev, bottom: true })), 400),
+      setTimeout(() => setCloudsParting(prev => ({ ...prev, middle: true })), 600),
+      setTimeout(() => setCloudsParting(prev => ({ ...prev, top: true })), 800),
+      setTimeout(() => setCloudsParting(prev => ({ ...prev, final: true })), 1000),
+    ];
+
+    return () => {
+      clearTimeout(launchTimer);
+      cloudTimers.forEach(timer => clearTimeout(timer));
+    };
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,11 +48,12 @@ const LoginPage = () => {
     className = "",
     style = {},
     animationType = "float",
+    isParting = false,
   }) => (
     <img
       src={cloudImage}
       alt="Cloud"
-      className={`w-full h-full object-contain ${className} ${animationType}`}
+      className={`w-full h-full object-contain ${className} ${animationType} ${isParting ? 'cloud-parting' : ''}`}
       style={style}
     />
   );
@@ -53,6 +76,83 @@ const LoginPage = () => {
     <>
       {/* CSS Animations */}
       <style jsx>{`
+        @keyframes rocketLaunch {
+          from {
+            transform: translateX(-50%) translateY(100vh);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+          }
+        }
+
+        @keyframes cloudRise {
+          from {
+            transform: translateY(100vh);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+
+        @keyframes cloudPart {
+          0% {
+            opacity: 1;
+            transform: scale(1) translateX(0);
+          }
+          50% {
+            opacity: 0.3;
+            transform: scale(0.8) translateX(20px);
+          }
+          100% {
+            opacity: 0;
+            transform: scale(0.6) translateX(40px);
+          }
+        }
+
+        @keyframes cloudPartLeft {
+          0% {
+            opacity: 1;
+            transform: scale(1) translateX(0);
+          }
+          50% {
+            opacity: 0.3;
+            transform: scale(0.8) translateX(-20px);
+          }
+          100% {
+            opacity: 0;
+            transform: scale(0.6) translateX(-40px);
+          }
+        }
+
+        @keyframes cloudFadeBack {
+          0% {
+            opacity: 0;
+          }
+          100% {
+            opacity: 1;
+          }
+        }
+
+        .rocket-launching {
+          animation: rocketLaunch 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .cloud-parting {
+          animation: cloudPart 0.8s ease-out forwards;
+        }
+
+        .cloud-parting-left {
+          animation: cloudPartLeft 0.8s ease-out forwards;
+        }
+
+        .cloud-fade-back {
+          animation: cloudFadeBack 1s ease-in 1.5s forwards;
+        }
+
         @keyframes float {
           0%,
           100% {
@@ -150,24 +250,91 @@ const LoginPage = () => {
           }
         }
 
+        /* Cloud containers that rise from below */
+        .cloud-container-1 {
+          transform: translateY(100vh);
+          opacity: 0;
+          animation: cloudRise 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s forwards;
+        }
+        .cloud-container-2 {
+          transform: translateY(100vh);
+          opacity: 0;
+          animation: cloudRise 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.15s forwards;
+        }
+        .cloud-container-3 {
+          transform: translateY(100vh);
+          opacity: 0;
+          animation: cloudRise 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
+        }
+        .cloud-container-4 {
+          transform: translateY(100vh);
+          opacity: 0;
+          animation: cloudRise 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.25s forwards;
+        }
+        .cloud-container-5 {
+          transform: translateY(100vh);
+          opacity: 0;
+          animation: cloudRise 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
+        }
+        .cloud-container-6 {
+          transform: translateY(100vh);
+          opacity: 0;
+          animation: cloudRise 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.35s forwards;
+        }
+        .cloud-container-7 {
+          transform: translateY(100vh);
+          opacity: 0;
+          animation: cloudRise 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.4s forwards;
+        }
+        .cloud-container-8 {
+          transform: translateY(100vh);
+          opacity: 0;
+          animation: cloudRise 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.45s forwards;
+        }
+        .cloud-container-9 {
+          transform: translateY(100vh);
+          opacity: 0;
+          animation: cloudRise 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.5s forwards;
+        }
+        .cloud-container-10 {
+          transform: translateY(100vh);
+          opacity: 0;
+          animation: cloudRise 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.55s forwards;
+        }
+        .cloud-container-11 {
+          transform: translateY(100vh);
+          opacity: 0;
+          animation: cloudRise 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.6s forwards;
+        }
+        .cloud-container-12 {
+          transform: translateY(100vh);
+          opacity: 0;
+          animation: cloudRise 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.65s forwards;
+        }
+
         .float {
           animation: float 6s ease-in-out infinite;
+          animation-delay: 2.5s;
         }
 
         .float-slow {
           animation: floatSlow 8s ease-in-out infinite;
+          animation-delay: 2.5s;
         }
 
         .float-reverse {
           animation: floatReverse 7s ease-in-out infinite;
+          animation-delay: 2.5s;
         }
 
         .drift {
           animation: drift 9s ease-in-out infinite;
+          animation-delay: 2.5s;
         }
 
         .gentle-float {
           animation: gentleFloat 4s ease-in-out infinite;
+          animation-delay: 2.5s;
         }
 
         .rocket-float {
@@ -213,20 +380,34 @@ const LoginPage = () => {
         }
       `}</style>
 
-      <div className="min-h-screen flex flex-col md:flex-row mobile-reduced-animation">
+      <div className="min-h-screen flex flex-col md:flex-row mobile-reduced-animation relative">
+        {/* Logo - Positioned absolute top left */}
+        <h1
+          className="absolute top-2 left-2 sm:top-4 sm:left-4 text-xl sm:text-2xl font-bold poppins-bold z-50"
+          style={{ color: "#E5B700" }}
+        >
+          Spectrum 358
+        </h1>
+
+        {/* Copyright - Positioned absolute bottom left */}
+        <p
+          className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 text-sm poppins-regular"
+          style={{ 
+            color: "#666666",
+            fontSize: "0.875rem",
+            fontWeight: 400,
+            lineHeight: "1.25rem",
+            zIndex: 100
+          }}
+        >
+          © Spectrum358 2025
+        </p>
+
         {/* Left Section - Login Form */}
         <div className="w-full md:w-1/2 bg-white flex items-center justify-center px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
           <div className="max-w-md w-full mx-auto">
-            {/* Logo */}
-            <h1
-              className="text-xl sm:text-2xl font-bold mb-8 sm:mb-12 lg:mb-16 text-center poppins-bold"
-              style={{ color: "#E5B700" }}
-            >
-              Spectrum 358
-            </h1>
-
             {/* Login Header */}
-            <div className="mb-6 sm:mb-8 text-center">
+            <div className="mb-6 sm:mb-8">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 poppins-bold">
                 Log in
               </h2>
@@ -397,22 +578,22 @@ const LoginPage = () => {
           {/* Background Clouds Layer - Clear/Opaque */}
           <div className="absolute inset-0 hidden md:block">
             {/* Top left cloud */}
-            <div className="absolute top-8 left-12 w-24 lg:w-32 h-15 lg:h-20">
+            <div className={`absolute top-8 left-12 w-24 lg:w-32 h-15 lg:h-20 cloud-container-1 ${cloudsParting.top ? 'cloud-parting-left cloud-fade-back' : ''}`}>
               <CloudImage animationType="float float-delay-1" />
             </div>
 
             {/* Top right cloud */}
-            <div className="absolute top-16 right-8 w-27 lg:w-36 h-16 lg:h-22">
+            <div className={`absolute top-16 right-8 w-27 lg:w-36 h-16 lg:h-22 cloud-container-2 ${cloudsParting.top ? 'cloud-parting cloud-fade-back' : ''}`}>
               <CloudImage animationType="float-slow float-delay-2" />
             </div>
 
             {/* Bottom left cloud */}
-            <div className="absolute bottom-20 left-16 w-30 lg:w-40 h-18 lg:h-24">
+            <div className={`absolute bottom-20 left-16 w-30 lg:w-40 h-18 lg:h-24 cloud-container-3 ${cloudsParting.bottom ? 'cloud-parting-left cloud-fade-back' : ''}`}>
               <CloudImage animationType="drift float-delay-3" />
             </div>
 
             {/* Bottom right cloud */}
-            <div className="absolute bottom-12 right-20 w-21 lg:w-28 h-12 lg:h-16">
+            <div className={`absolute bottom-12 right-20 w-21 lg:w-28 h-12 lg:h-16 cloud-container-4 ${cloudsParting.bottom ? 'cloud-parting cloud-fade-back' : ''}`}>
               <CloudImage animationType="float-reverse float-delay-4" />
             </div>
           </div>
@@ -422,12 +603,12 @@ const LoginPage = () => {
             {/* Behind card clouds - positioned to show through transparent card */}
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
               {/* Center cloud behind card */}
-              <div className="absolute -top-8 -left-12 w-24 lg:w-32 h-14 lg:h-18">
+              <div className={`absolute -top-8 -left-12 w-24 lg:w-32 h-14 lg:h-18 cloud-container-5 ${cloudsParting.middle ? 'cloud-parting-left cloud-fade-back' : ''}`}>
                 <CloudImage animationType="gentle-float float-delay-3" />
               </div>
 
               {/* Bottom center cloud behind card */}
-              <div className="absolute top-16 left-8 w-20 lg:w-26 h-12 lg:h-16">
+              <div className={`absolute top-16 left-8 w-20 lg:w-26 h-12 lg:h-16 cloud-container-6 ${cloudsParting.middle ? 'cloud-parting cloud-fade-back' : ''}`}>
                 <CloudImage animationType="float-slow float-delay-4" />
               </div>
             </div>
@@ -438,7 +619,7 @@ const LoginPage = () => {
             {/* Clouds positioned exactly like your reference image */}
 
             {/* Top left cloud - positioned like in your image */}
-            <div className="absolute -top-16 -left-20 w-28 lg:w-36 h-17 lg:h-22">
+            <div className={`absolute -top-16 -left-20 w-28 lg:w-36 h-17 lg:h-22 cloud-container-7 ${cloudsParting.final ? 'cloud-parting-left cloud-fade-back' : ''}`}>
               <CloudImage
                 animationType="drift"
                 style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
@@ -446,7 +627,7 @@ const LoginPage = () => {
             </div>
 
             {/* Top right cloud - positioned like in your image */}
-            <div className="absolute -top-12 -right-24 w-32 lg:w-42 h-19 lg:h-25">
+            <div className={`absolute -top-12 -right-24 w-32 lg:w-42 h-19 lg:h-25 cloud-container-8 ${cloudsParting.final ? 'cloud-parting cloud-fade-back' : ''}`}>
               <CloudImage
                 animationType="float-slow float-delay-1"
                 style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
@@ -454,7 +635,7 @@ const LoginPage = () => {
             </div>
 
             {/* Left side cloud - positioned like in your image */}
-            <div className="absolute top-1/2 -left-24 -translate-y-1/2 w-24 lg:w-32 h-14 lg:h-18">
+            <div className={`absolute top-1/2 -left-24 -translate-y-1/2 w-24 lg:w-32 h-14 lg:h-18 cloud-container-9 ${cloudsParting.middle ? 'cloud-parting-left cloud-fade-back' : ''}`}>
               <CloudImage
                 animationType="gentle-float float-delay-4"
                 style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
@@ -462,7 +643,7 @@ const LoginPage = () => {
             </div>
 
             {/* Right side cloud - positioned like in your image */}
-            <div className="absolute top-1/3 -right-20 w-22 lg:w-28 h-13 lg:h-17">
+            <div className={`absolute top-1/3 -right-20 w-22 lg:w-28 h-13 lg:h-17 cloud-container-10 ${cloudsParting.middle ? 'cloud-parting cloud-fade-back' : ''}`}>
               <CloudImage
                 animationType="drift float-delay-1"
                 style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
@@ -470,7 +651,7 @@ const LoginPage = () => {
             </div>
 
             {/* Bottom left cloud - positioned like in your image */}
-            <div className="absolute -bottom-18 -left-16 w-34 lg:w-44 h-20 lg:h-26">
+            <div className={`absolute -bottom-18 -left-16 w-34 lg:w-44 h-20 lg:h-26 cloud-container-11 ${cloudsParting.bottom ? 'cloud-parting-left cloud-fade-back' : ''}`}>
               <CloudImage
                 animationType="float float-delay-2"
                 style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
@@ -478,7 +659,7 @@ const LoginPage = () => {
             </div>
 
             {/* Bottom right cloud - positioned like in your image */}
-            <div className="absolute -bottom-14 -right-18 w-26 lg:w-34 h-16 lg:h-20">
+            <div className={`absolute -bottom-14 -right-18 w-26 lg:w-34 h-16 lg:h-20 cloud-container-12 ${cloudsParting.bottom ? 'cloud-parting cloud-fade-back' : ''}`}>
               <CloudImage
                 animationType="float-reverse float-delay-3"
                 style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
@@ -486,18 +667,27 @@ const LoginPage = () => {
             </div>
 
             {/* Small top cloud - like in your image */}
-            <div className="absolute -top-8 left-1/4 w-16 lg:w-20 h-10 lg:h-12">
+            <div className={`absolute -top-8 left-1/4 w-16 lg:w-20 h-10 lg:h-12 cloud-container-1 ${cloudsParting.top ? 'cloud-parting-left cloud-fade-back' : ''}`}>
               <CloudImage
                 animationType="float-slow float-delay-3"
                 style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.15))" }}
               />
             </div>
 
-            {/* Rocket positioned above the glass card */}
-            <div className="absolute -top-24 left-1/2 transform -translate-x-1/2 w-18 lg:w-28 h-22 lg:h-35 z-30">
+            {/* Rocket positioned above the glass card - slightly right of center */}
+            <div className={`absolute -top-32 left-1/2 transform -translate-x-1/4 w-18 lg:w-28 h-22 lg:h-35 z-30 ${rocketLaunched ? 'rocket-launching' : ''}`}
+              style={{
+                transform: rocketLaunched ? '' : 'translateX(-50%) translateY(100vh)',
+                opacity: rocketLaunched ? '' : '0',
+              }}
+            >
               <RocketImage
                 animationType="rocket-float float-delay-2"
-                style={{ filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.3))" }}
+                style={{
+                  filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.3))",
+                  width: "240px",
+                  height: "240px",
+                }}
               />
             </div>
 
@@ -520,7 +710,7 @@ const LoginPage = () => {
                 </h2>
 
                 {/* Small cloud inside card bottom - positioned like in your image */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-14 lg:w-18 h-8 lg:h-11">
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-14 lg:w-18 h-8 lg:h-11 cloud-container-2">
                   <CloudImage animationType="gentle-float float-delay-2" />
                 </div>
               </div>
@@ -533,7 +723,7 @@ const LoginPage = () => {
             style={{ zIndex: 20 }}
           >
             {/* Top right foreground cloud */}
-            <div className="absolute top-8 right-12 w-22 lg:w-28 h-13 lg:h-17">
+            <div className={`absolute top-8 right-12 w-22 lg:w-28 h-13 lg:h-17 cloud-container-3 ${cloudsParting.top ? 'cloud-parting cloud-fade-back' : ''}`}>
               <CloudImage
                 animationType="float-reverse float-delay-1"
                 style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.1))" }}
@@ -541,7 +731,7 @@ const LoginPage = () => {
             </div>
 
             {/* Bottom right foreground cloud */}
-            <div className="absolute bottom-24 right-8 w-26 lg:w-34 h-16 lg:h-20">
+            <div className={`absolute bottom-24 right-8 w-26 lg:w-34 h-16 lg:h-20 cloud-container-4 ${cloudsParting.middle ? 'cloud-parting cloud-fade-back' : ''}`}>
               <CloudImage
                 animationType="drift float-delay-3"
                 style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.1))" }}
@@ -549,7 +739,7 @@ const LoginPage = () => {
             </div>
 
             {/* Bottom left foreground cloud */}
-            <div className="absolute bottom-6 left-16 w-28 lg:w-36 h-17 lg:h-22">
+            <div className={`absolute bottom-6 left-16 w-28 lg:w-36 h-17 lg:h-22 cloud-container-5 ${cloudsParting.bottom ? 'cloud-parting-left cloud-fade-back' : ''}`}>
               <CloudImage
                 animationType="float-slow float-delay-4"
                 style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.1))" }}
@@ -557,7 +747,7 @@ const LoginPage = () => {
             </div>
 
             {/* Top left foreground cloud */}
-            <div className="absolute top-20 left-6 w-20 lg:w-26 h-12 lg:h-16">
+            <div className={`absolute top-20 left-6 w-20 lg:w-26 h-12 lg:h-16 cloud-container-6 ${cloudsParting.middle ? 'cloud-parting-left cloud-fade-back' : ''}`}>
               <CloudImage
                 animationType="gentle-float float-delay-2"
                 style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.1))" }}
