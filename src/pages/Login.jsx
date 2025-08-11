@@ -1,4 +1,4 @@
-// // import React, { useState, useEffect } from "react";
+// import React, { useState, useEffect } from "react";
 // import teamLogo from "../../src/assets/Spectrum3581.png";
 // import cloudImage from "../../src/assets/Asset4@4x3_2.png";
 // import rocketImage from "../../src/assets/Saly-43@2x.png";
@@ -19,10 +19,10 @@
 
 //     // Trigger cloud parting effects at specific times during rocket ascent
 //     const cloudTimers = [
-//       setTimeout(() => setCloudsParting(prev => ({ ...prev, bottom: true })), 400),
-//       setTimeout(() => setCloudsParting(prev => ({ ...prev, middle: true })), 600),
-//       setTimeout(() => setCloudsParting(prev => ({ ...prev, top: true })), 800),
-//       setTimeout(() => setCloudsParting(prev => ({ ...prev, final: true })), 1000),
+//       setTimeout(() => setCloudsParting(prev => ({ ...prev, bottom: true })), 200),
+//       setTimeout(() => setCloudsParting(prev => ({ ...prev, middle: true })), 300),
+//       setTimeout(() => setCloudsParting(prev => ({ ...prev, top: true })), 400),
+//       setTimeout(() => setCloudsParting(prev => ({ ...prev, final: true })), 500),
 //     ];
 
 //     return () => {
@@ -74,212 +74,53 @@
 //     <>
 //       {/* CSS Animations */}
 //       <style jsx>{`
-//         @keyframes rocketLaunchWavy {
-//           0% {
-//             transform: translateX(-50%) translateY(100vh) rotate(0deg);
+//         @keyframes rocketLaunchSmooth {
+//           from {
+//             transform: translateX(-50%) translateY(100vh);
 //             opacity: 0;
 //           }
-//           2% {
+//           1% {
 //             opacity: 1;
-//             transform: translateX(calc(-50% + 5px)) translateY(98vh) rotate(0.5deg);
 //           }
-//           10% {
-//             transform: translateX(calc(-50% + 15px)) translateY(85vh) rotate(2deg);
-//           }
-//           20% {
-//             transform: translateX(calc(-50% + 20px)) translateY(75vh) rotate(2.5deg);
-//           }
-//           30% {
-//             transform: translateX(calc(-50% + 15px)) translateY(65vh) rotate(1deg);
-//           }
-//           40% {
-//             transform: translateX(calc(-50% - 10px)) translateY(50vh) rotate(-1.5deg);
-//           }
-//           50% {
-//             transform: translateX(calc(-50% - 20px)) translateY(40vh) rotate(-2.5deg);
-//           }
-//           60% {
-//             transform: translateX(calc(-50% - 15px)) translateY(25vh) rotate(-1deg);
-//           }
-//           70% {
-//             transform: translateX(calc(-50% + 10px)) translateY(15vh) rotate(1.5deg);
-//           }
-//           80% {
-//             transform: translateX(calc(-50% + 15px)) translateY(10vh) rotate(2deg);
-//           }
-//           90% {
-//             transform: translateX(calc(-50% + 8px)) translateY(5vh) rotate(0.5deg);
-//           }
-//           100% {
-//             transform: translateX(-50%) translateY(0) rotate(0deg);
+//           to {
+//             transform: translateX(-50%) translateY(0);
 //             opacity: 1;
 //           }
 //         }
 
-//         @keyframes cloudRiseWavy1 {
-//           0% {
-//             transform: translateY(100vh) translateX(0);
+//         @keyframes snakeWave {
+//           from {
+//             transform: translateX(0);
+//           }
+//           to {
+//             transform: translateX(0);
+//           }
+//         }
+
+//         @keyframes cloudRise1 {
+//           from {
+//             transform: translateY(100vh);
 //             opacity: 0;
 //           }
 //           2% {
-//             opacity: 0.7;
-//             transform: translateY(98vh) translateX(3px);
+//             opacity: 0.8;
 //           }
-//           10% {
-//             transform: translateY(90vh) translateX(10px);
-//           }
-//           20% {
-//             transform: translateY(80vh) translateX(15px);
-//           }
-//           30% {
-//             transform: translateY(70vh) translateX(12px);
-//           }
-//           40% {
-//             transform: translateY(60vh) translateX(0px);
-//           }
-//           50% {
-//             transform: translateY(50vh) translateX(-12px);
-//           }
-//           60% {
-//             transform: translateY(40vh) translateX(-15px);
-//           }
-//           70% {
-//             transform: translateY(30vh) translateX(-10px);
-//           }
-//           80% {
-//             transform: translateY(20vh) translateX(5px);
-//           }
-//           90% {
-//             transform: translateY(10vh) translateX(8px);
-//           }
-//           100% {
-//             transform: translateY(0) translateX(0);
+//           to {
+//             transform: translateY(0);
 //             opacity: 1;
 //           }
 //         }
 
-//         @keyframes cloudRiseWavy2 {
-//           0% {
-//             transform: translateY(100vh) translateX(0);
+//         @keyframes cloudRise2 {
+//           from {
+//             transform: translateY(100vh) scale(0.9);
 //             opacity: 0;
 //           }
 //           2% {
-//             opacity: 0.7;
-//             transform: translateY(98vh) translateX(-3px);
+//             opacity: 0.8;
 //           }
-//           10% {
-//             transform: translateY(90vh) translateX(-10px);
-//           }
-//           20% {
-//             transform: translateY(80vh) translateX(-18px);
-//           }
-//           30% {
-//             transform: translateY(70vh) translateX(-15px);
-//           }
-//           40% {
-//             transform: translateY(60vh) translateX(-5px);
-//           }
-//           50% {
-//             transform: translateY(50vh) translateX(10px);
-//           }
-//           60% {
-//             transform: translateY(40vh) translateX(18px);
-//           }
-//           70% {
-//             transform: translateY(30vh) translateX(15px);
-//           }
-//           80% {
-//             transform: translateY(20vh) translateX(5px);
-//           }
-//           90% {
-//             transform: translateY(10vh) translateX(-5px);
-//           }
-//           100% {
-//             transform: translateY(0) translateX(0);
-//             opacity: 1;
-//           }
-//         }
-
-//         @keyframes cloudRiseWavy3 {
-//           0% {
-//             transform: translateY(100vh) translateX(0) scale(0.9);
-//             opacity: 0;
-//           }
-//           2% {
-//             opacity: 0.7;
-//             transform: translateY(98vh) translateX(5px) scale(0.91);
-//           }
-//           10% {
-//             transform: translateY(90vh) translateX(12px) scale(0.92);
-//           }
-//           20% {
-//             transform: translateY(80vh) translateX(20px) scale(0.93);
-//           }
-//           30% {
-//             transform: translateY(70vh) translateX(25px) scale(0.94);
-//           }
-//           40% {
-//             transform: translateY(60vh) translateX(20px) scale(0.95);
-//           }
-//           50% {
-//             transform: translateY(50vh) translateX(5px) scale(0.96);
-//           }
-//           60% {
-//             transform: translateY(40vh) translateX(-10px) scale(0.97);
-//           }
-//           70% {
-//             transform: translateY(30vh) translateX(-20px) scale(0.98);
-//           }
-//           80% {
-//             transform: translateY(20vh) translateX(-15px) scale(0.98);
-//           }
-//           90% {
-//             transform: translateY(10vh) translateX(-8px) scale(0.99);
-//           }
-//           100% {
-//             transform: translateY(0) translateX(0) scale(1);
-//             opacity: 1;
-//           }
-//         }
-
-//         @keyframes cloudRiseWavy4 {
-//           0% {
-//             transform: translateY(100vh) translateX(0) rotate(0deg);
-//             opacity: 0;
-//           }
-//           2% {
-//             opacity: 0.7;
-//             transform: translateY(98vh) translateX(-5px) rotate(-0.5deg);
-//           }
-//           10% {
-//             transform: translateY(90vh) translateX(-12px) rotate(-1deg);
-//           }
-//           20% {
-//             transform: translateY(80vh) translateX(-18px) rotate(-1.5deg);
-//           }
-//           30% {
-//             transform: translateY(70vh) translateX(-20px) rotate(-2deg);
-//           }
-//           40% {
-//             transform: translateY(60vh) translateX(-15px) rotate(-1.5deg);
-//           }
-//           50% {
-//             transform: translateY(50vh) translateX(0px) rotate(0deg);
-//           }
-//           60% {
-//             transform: translateY(40vh) translateX(15px) rotate(1.5deg);
-//           }
-//           70% {
-//             transform: translateY(30vh) translateX(20px) rotate(2deg);
-//           }
-//           80% {
-//             transform: translateY(20vh) translateX(18px) rotate(1.5deg);
-//           }
-//           90% {
-//             transform: translateY(10vh) translateX(10px) rotate(1deg);
-//           }
-//           100% {
-//             transform: translateY(0) translateX(0) rotate(0deg);
+//           to {
+//             transform: translateY(0) scale(1);
 //             opacity: 1;
 //           }
 //         }
@@ -323,8 +164,28 @@
 //           }
 //         }
 
+//         /* Rocket with smooth wave motion */
 //         .rocket-launching {
-//           animation: rocketLaunchWavy 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+//           animation: rocketLaunchSmooth 1.2s linear forwards;
+//         }
+        
+//         .rocket-launching > img {
+//           animation: snakeWave 1.2s ease-in-out forwards;
+//         }
+
+//         /* Override the snakeWave for rocket with CSS custom properties */
+//         @keyframes rocketSnakeWave {
+//           0% { transform: translateX(0); }
+//           10% { transform: translateX(5px); }
+//           20% { transform: translateX(10px); }
+//           30% { transform: translateX(15px); }
+//           40% { transform: translateX(20px); }
+//           50% { transform: translateX(15px); }
+//           60% { transform: translateX(0px); }
+//           70% { transform: translateX(-15px); }
+//           80% { transform: translateX(-20px); }
+//           90% { transform: translateX(-10px); }
+//           100% { transform: translateX(0); }
 //         }
 
 //         .cloud-parting {
@@ -336,73 +197,47 @@
 //         }
 
 //         .cloud-fade-back {
-//           animation: cloudFadeBack 1s ease-in 1.5s forwards;
+//           animation: cloudFadeBack 0.8s ease-in 1s forwards;
 //         }
 
 //         @keyframes float {
-//           0%,
-//           100% {
+//           0%, 100% {
 //             transform: translateY(0px) translateX(0px);
 //           }
-//           25% {
-//             transform: translateY(-10px) translateX(5px);
-//           }
 //           50% {
-//             transform: translateY(0px) translateX(10px);
-//           }
-//           75% {
-//             transform: translateY(-5px) translateX(5px);
+//             transform: translateY(-10px) translateX(5px);
 //           }
 //         }
 
 //         @keyframes floatSlow {
-//           0%,
-//           100% {
+//           0%, 100% {
 //             transform: translateY(0px) translateX(0px);
 //           }
-//           33% {
+//           50% {
 //             transform: translateY(-8px) translateX(8px);
-//           }
-//           66% {
-//             transform: translateY(-3px) translateX(-3px);
 //           }
 //         }
 
 //         @keyframes floatReverse {
-//           0%,
-//           100% {
+//           0%, 100% {
 //             transform: translateY(0px) translateX(0px);
 //           }
-//           25% {
-//             transform: translateY(-8px) translateX(-8px);
-//           }
 //           50% {
-//             transform: translateY(0px) translateX(-15px);
-//           }
-//           75% {
-//             transform: translateY(-4px) translateX(-8px);
+//             transform: translateY(-8px) translateX(-8px);
 //           }
 //         }
 
 //         @keyframes drift {
-//           0%,
-//           100% {
+//           0%, 100% {
 //             transform: translateY(0px) translateX(0px) rotate(0deg);
 //           }
-//           25% {
-//             transform: translateY(-12px) translateX(6px) rotate(1deg);
-//           }
 //           50% {
-//             transform: translateY(-6px) translateX(12px) rotate(0deg);
-//           }
-//           75% {
-//             transform: translateY(-15px) translateX(6px) rotate(-1deg);
+//             transform: translateY(-12px) translateX(6px) rotate(1deg);
 //           }
 //         }
 
 //         @keyframes gentleFloat {
-//           0%,
-//           100% {
+//           0%, 100% {
 //             transform: translateY(0px);
 //           }
 //           50% {
@@ -411,24 +246,16 @@
 //         }
 
 //         @keyframes rocketFloat {
-//           0%,
-//           100% {
+//           0%, 100% {
 //             transform: translateY(0px) translateX(0px) rotate(0deg);
 //           }
-//           25% {
-//             transform: translateY(-15px) translateX(8px) rotate(2deg);
-//           }
 //           50% {
-//             transform: translateY(-8px) translateX(15px) rotate(0deg);
-//           }
-//           75% {
-//             transform: translateY(-20px) translateX(8px) rotate(-2deg);
+//             transform: translateY(-15px) translateX(8px) rotate(1deg);
 //           }
 //         }
 
 //         @keyframes rocketHover {
-//           0%,
-//           100% {
+//           0%, 100% {
 //             transform: translateY(0px) rotate(0deg);
 //           }
 //           50% {
@@ -436,91 +263,192 @@
 //           }
 //         }
 
-//         /* Cloud containers with wavy rise animations */
+//         /* Cloud containers with smooth rise animations */
+//         @keyframes cloudWave1 {
+//           0% { transform: translateX(0); }
+//           10% { transform: translateX(3px); }
+//           20% { transform: translateX(6px); }
+//           30% { transform: translateX(9px); }
+//           40% { transform: translateX(12px); }
+//           50% { transform: translateX(8px); }
+//           60% { transform: translateX(0px); }
+//           70% { transform: translateX(-8px); }
+//           80% { transform: translateX(-12px); }
+//           90% { transform: translateX(-6px); }
+//           100% { transform: translateX(0); }
+//         }
+
+//         @keyframes cloudWave2 {
+//           0% { transform: translateX(0); }
+//           10% { transform: translateX(-2px); }
+//           20% { transform: translateX(-5px); }
+//           30% { transform: translateX(-8px); }
+//           40% { transform: translateX(-10px); }
+//           50% { transform: translateX(-6px); }
+//           60% { transform: translateX(0px); }
+//           70% { transform: translateX(6px); }
+//           80% { transform: translateX(10px); }
+//           90% { transform: translateX(5px); }
+//           100% { transform: translateX(0); }
+//         }
+
+//         @keyframes cloudWave3 {
+//           0% { transform: translateX(0); }
+//           10% { transform: translateX(4px); }
+//           20% { transform: translateX(8px); }
+//           30% { transform: translateX(12px); }
+//           40% { transform: translateX(16px); }
+//           50% { transform: translateX(10px); }
+//           60% { transform: translateX(0px); }
+//           70% { transform: translateX(-10px); }
+//           80% { transform: translateX(-16px); }
+//           90% { transform: translateX(-8px); }
+//           100% { transform: translateX(0); }
+//         }
+
 //         .cloud-container-1 {
 //           transform: translateY(100vh);
 //           opacity: 0;
-//           animation: cloudRiseWavy1 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s forwards;
+//           animation: cloudRise1 1.2s linear 0.05s forwards;
 //         }
+        
+//         .cloud-container-1 > img {
+//           animation: cloudWave1 1.2s ease-in-out 0.05s forwards;
+//         }
+
 //         .cloud-container-2 {
 //           transform: translateY(100vh);
 //           opacity: 0;
-//           animation: cloudRiseWavy2 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.15s forwards;
+//           animation: cloudRise1 1.2s linear 0.075s forwards;
 //         }
+        
+//         .cloud-container-2 > img {
+//           animation: cloudWave2 1.2s ease-in-out 0.075s forwards;
+//         }
+
 //         .cloud-container-3 {
 //           transform: translateY(100vh);
 //           opacity: 0;
-//           animation: cloudRiseWavy3 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
+//           animation: cloudRise2 1.2s linear 0.1s forwards;
 //         }
+        
+//         .cloud-container-3 > img {
+//           animation: cloudWave3 1.2s ease-in-out 0.1s forwards;
+//         }
+
 //         .cloud-container-4 {
 //           transform: translateY(100vh);
 //           opacity: 0;
-//           animation: cloudRiseWavy4 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.25s forwards;
+//           animation: cloudRise1 1.2s linear 0.125s forwards;
 //         }
+        
+//         .cloud-container-4 > img {
+//           animation: cloudWave2 1.2s ease-in-out 0.125s forwards;
+//         }
+
 //         .cloud-container-5 {
 //           transform: translateY(100vh);
 //           opacity: 0;
-//           animation: cloudRiseWavy1 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
+//           animation: cloudRise1 1.2s linear 0.15s forwards;
 //         }
+        
+//         .cloud-container-5 > img {
+//           animation: cloudWave1 1.2s ease-in-out 0.15s forwards;
+//         }
+
 //         .cloud-container-6 {
 //           transform: translateY(100vh);
 //           opacity: 0;
-//           animation: cloudRiseWavy2 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.35s forwards;
+//           animation: cloudRise1 1.2s linear 0.175s forwards;
 //         }
+        
+//         .cloud-container-6 > img {
+//           animation: cloudWave2 1.2s ease-in-out 0.175s forwards;
+//         }
+
 //         .cloud-container-7 {
 //           transform: translateY(100vh);
 //           opacity: 0;
-//           animation: cloudRiseWavy3 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.4s forwards;
+//           animation: cloudRise2 1.2s linear 0.2s forwards;
 //         }
+        
+//         .cloud-container-7 > img {
+//           animation: cloudWave3 1.2s ease-in-out 0.2s forwards;
+//         }
+
 //         .cloud-container-8 {
 //           transform: translateY(100vh);
 //           opacity: 0;
-//           animation: cloudRiseWavy4 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.45s forwards;
+//           animation: cloudRise1 1.2s linear 0.225s forwards;
 //         }
+        
+//         .cloud-container-8 > img {
+//           animation: cloudWave2 1.2s ease-in-out 0.225s forwards;
+//         }
+
 //         .cloud-container-9 {
 //           transform: translateY(100vh);
 //           opacity: 0;
-//           animation: cloudRiseWavy1 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.5s forwards;
+//           animation: cloudRise1 1.2s linear 0.25s forwards;
 //         }
+        
+//         .cloud-container-9 > img {
+//           animation: cloudWave1 1.2s ease-in-out 0.25s forwards;
+//         }
+
 //         .cloud-container-10 {
 //           transform: translateY(100vh);
 //           opacity: 0;
-//           animation: cloudRiseWavy2 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.55s forwards;
+//           animation: cloudRise1 1.2s linear 0.275s forwards;
 //         }
+        
+//         .cloud-container-10 > img {
+//           animation: cloudWave2 1.2s ease-in-out 0.275s forwards;
+//         }
+
 //         .cloud-container-11 {
 //           transform: translateY(100vh);
 //           opacity: 0;
-//           animation: cloudRiseWavy3 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.6s forwards;
+//           animation: cloudRise2 1.2s linear 0.3s forwards;
 //         }
+        
+//         .cloud-container-11 > img {
+//           animation: cloudWave3 1.2s ease-in-out 0.3s forwards;
+//         }
+
 //         .cloud-container-12 {
 //           transform: translateY(100vh);
 //           opacity: 0;
-//           animation: cloudRiseWavy4 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.65s forwards;
+//           animation: cloudRise1 1.2s linear 0.325s forwards;
+//         }
+        
+//         .cloud-container-12 > img {
+//           animation: cloudWave2 1.2s ease-in-out 0.325s forwards;
 //         }
 
 //         .float {
 //           animation: float 6s ease-in-out infinite;
-//           animation-delay: 2.5s;
+//           animation-delay: 1.5s;
 //         }
 
 //         .float-slow {
 //           animation: floatSlow 8s ease-in-out infinite;
-//           animation-delay: 2.5s;
+//           animation-delay: 1.5s;
 //         }
 
 //         .float-reverse {
 //           animation: floatReverse 7s ease-in-out infinite;
-//           animation-delay: 2.5s;
+//           animation-delay: 1.5s;
 //         }
 
 //         .drift {
 //           animation: drift 9s ease-in-out infinite;
-//           animation-delay: 2.5s;
+//           animation-delay: 1.5s;
 //         }
 
 //         .gentle-float {
 //           animation: gentleFloat 4s ease-in-out infinite;
-//           animation-delay: 2.5s;
+//           animation-delay: 1.5s;
 //         }
 
 //         .rocket-float {
@@ -765,22 +693,22 @@
 //           <div className="absolute inset-0 hidden md:block">
 //             {/* Top left cloud */}
 //             <div className={`absolute top-8 left-12 w-24 lg:w-32 h-15 lg:h-20 cloud-container-1 ${cloudsParting.top ? 'cloud-parting-left cloud-fade-back' : ''}`}>
-//               <CloudImage animationType="float float-delay-1" />
+//               <CloudImage />
 //             </div>
 
 //             {/* Top right cloud */}
 //             <div className={`absolute top-16 right-8 w-27 lg:w-36 h-16 lg:h-22 cloud-container-2 ${cloudsParting.top ? 'cloud-parting cloud-fade-back' : ''}`}>
-//               <CloudImage animationType="float-slow float-delay-2" />
+//               <CloudImage />
 //             </div>
 
 //             {/* Bottom left cloud */}
 //             <div className={`absolute bottom-20 left-16 w-30 lg:w-40 h-18 lg:h-24 cloud-container-3 ${cloudsParting.bottom ? 'cloud-parting-left cloud-fade-back' : ''}`}>
-//               <CloudImage animationType="drift float-delay-3" />
+//               <CloudImage />
 //             </div>
 
 //             {/* Bottom right cloud */}
 //             <div className={`absolute bottom-12 right-20 w-21 lg:w-28 h-12 lg:h-16 cloud-container-4 ${cloudsParting.bottom ? 'cloud-parting cloud-fade-back' : ''}`}>
-//               <CloudImage animationType="float-reverse float-delay-4" />
+//               <CloudImage />
 //             </div>
 //           </div>
 
@@ -790,12 +718,12 @@
 //             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
 //               {/* Center cloud behind card */}
 //               <div className={`absolute -top-8 -left-12 w-24 lg:w-32 h-14 lg:h-18 cloud-container-5 ${cloudsParting.middle ? 'cloud-parting-left cloud-fade-back' : ''}`}>
-//                 <CloudImage animationType="gentle-float float-delay-3" />
+//                 <CloudImage />
 //               </div>
 
 //               {/* Bottom center cloud behind card */}
 //               <div className={`absolute top-16 left-8 w-20 lg:w-26 h-12 lg:h-16 cloud-container-6 ${cloudsParting.middle ? 'cloud-parting cloud-fade-back' : ''}`}>
-//                 <CloudImage animationType="float-slow float-delay-4" />
+//                 <CloudImage />
 //               </div>
 //             </div>
 //           </div>
@@ -807,7 +735,6 @@
 //             {/* Top left cloud - positioned like in your image */}
 //             <div className={`absolute -top-16 -left-20 w-28 lg:w-36 h-17 lg:h-22 cloud-container-7 ${cloudsParting.final ? 'cloud-parting-left cloud-fade-back' : ''}`}>
 //               <CloudImage
-//                 animationType="drift"
 //                 style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
 //               />
 //             </div>
@@ -815,7 +742,6 @@
 //             {/* Top right cloud - positioned like in your image */}
 //             <div className={`absolute -top-12 -right-24 w-32 lg:w-42 h-19 lg:h-25 cloud-container-8 ${cloudsParting.final ? 'cloud-parting cloud-fade-back' : ''}`}>
 //               <CloudImage
-//                 animationType="float-slow float-delay-1"
 //                 style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
 //               />
 //             </div>
@@ -823,7 +749,6 @@
 //             {/* Left side cloud - positioned like in your image */}
 //             <div className={`absolute top-1/2 -left-24 -translate-y-1/2 w-24 lg:w-32 h-14 lg:h-18 cloud-container-9 ${cloudsParting.middle ? 'cloud-parting-left cloud-fade-back' : ''}`}>
 //               <CloudImage
-//                 animationType="gentle-float float-delay-4"
 //                 style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
 //               />
 //             </div>
@@ -831,7 +756,6 @@
 //             {/* Right side cloud - positioned like in your image */}
 //             <div className={`absolute top-1/3 -right-20 w-22 lg:w-28 h-13 lg:h-17 cloud-container-10 ${cloudsParting.middle ? 'cloud-parting cloud-fade-back' : ''}`}>
 //               <CloudImage
-//                 animationType="drift float-delay-1"
 //                 style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
 //               />
 //             </div>
@@ -839,7 +763,6 @@
 //             {/* Bottom left cloud - positioned like in your image */}
 //             <div className={`absolute -bottom-18 -left-16 w-34 lg:w-44 h-20 lg:h-26 cloud-container-11 ${cloudsParting.bottom ? 'cloud-parting-left cloud-fade-back' : ''}`}>
 //               <CloudImage
-//                 animationType="float float-delay-2"
 //                 style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
 //               />
 //             </div>
@@ -847,7 +770,6 @@
 //             {/* Bottom right cloud - positioned like in your image */}
 //             <div className={`absolute -bottom-14 -right-18 w-26 lg:w-34 h-16 lg:h-20 cloud-container-12 ${cloudsParting.bottom ? 'cloud-parting cloud-fade-back' : ''}`}>
 //               <CloudImage
-//                 animationType="float-reverse float-delay-3"
 //                 style={{ filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.2))" }}
 //               />
 //             </div>
@@ -855,7 +777,6 @@
 //             {/* Small top cloud - like in your image */}
 //             <div className={`absolute -top-8 left-1/4 w-16 lg:w-20 h-10 lg:h-12 cloud-container-1 ${cloudsParting.top ? 'cloud-parting-left cloud-fade-back' : ''}`}>
 //               <CloudImage
-//                 animationType="float-slow float-delay-3"
 //                 style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.15))" }}
 //               />
 //             </div>
@@ -868,11 +789,12 @@
 //               }}
 //             >
 //               <RocketImage
-//                 animationType="rocket-float float-delay-2"
+//                 animationType={rocketLaunched ? "rocketSnakeWave" : ""}
 //                 style={{
 //                   filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.3))",
 //                   width: "240px",
 //                   height: "240px",
+//                   animation: rocketLaunched ? "rocketSnakeWave 1.2s ease-in-out forwards" : "",
 //                 }}
 //               />
 //             </div>
@@ -911,7 +833,6 @@
 //             {/* Top right foreground cloud */}
 //             <div className={`absolute top-8 right-12 w-22 lg:w-28 h-13 lg:h-17 cloud-container-3 ${cloudsParting.top ? 'cloud-parting cloud-fade-back' : ''}`}>
 //               <CloudImage
-//                 animationType="float-reverse float-delay-1"
 //                 style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.1))" }}
 //               />
 //             </div>
@@ -919,7 +840,6 @@
 //             {/* Bottom right foreground cloud */}
 //             <div className={`absolute bottom-24 right-8 w-26 lg:w-34 h-16 lg:h-20 cloud-container-4 ${cloudsParting.middle ? 'cloud-parting cloud-fade-back' : ''}`}>
 //               <CloudImage
-//                 animationType="drift float-delay-3"
 //                 style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.1))" }}
 //               />
 //             </div>
@@ -927,7 +847,6 @@
 //             {/* Bottom left foreground cloud */}
 //             <div className={`absolute bottom-6 left-16 w-28 lg:w-36 h-17 lg:h-22 cloud-container-5 ${cloudsParting.bottom ? 'cloud-parting-left cloud-fade-back' : ''}`}>
 //               <CloudImage
-//                 animationType="float-slow float-delay-4"
 //                 style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.1))" }}
 //               />
 //             </div>
@@ -935,7 +854,6 @@
 //             {/* Top left foreground cloud */}
 //             <div className={`absolute top-20 left-6 w-20 lg:w-26 h-12 lg:h-16 cloud-container-6 ${cloudsParting.middle ? 'cloud-parting-left cloud-fade-back' : ''}`}>
 //               <CloudImage
-//                 animationType="gentle-float float-delay-2"
 //                 style={{ filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.1))" }}
 //               />
 //             </div>
@@ -947,6 +865,7 @@
 // };
 
 // export default LoginPage;
+
 
 import React, { useState, useEffect } from "react";
 import teamLogo from "../../src/assets/Spectrum3581.png";

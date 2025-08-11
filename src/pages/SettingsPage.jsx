@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search, Bell, ChevronDown, Menu, Upload } from "lucide-react";
+import { Search, Bell, ChevronDown, Menu, Upload , Users} from "lucide-react";
 import Header from "../components/Header";
 
 const SettingsPage = () => {
@@ -13,7 +13,7 @@ const SettingsPage = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <Header title="Profile" icon={Menu} />
+      <Header title="Profile" icon={Users} />
 
       {/* Profile Content */}
       <div className="p-4 sm:p-6 lg:p-6">

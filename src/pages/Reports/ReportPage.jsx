@@ -4,6 +4,7 @@ import {
   Bell,
   ChevronDown,
   Menu,
+  FileText,
   Download,
   Filter,
   DollarSign,
@@ -220,7 +221,7 @@ const ReportPage = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <Header title="Report Page" icon={Download} />
+      <Header title="Report Page" icon={FileText} />
 
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (

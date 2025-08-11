@@ -9,6 +9,7 @@ import {
   X,
   CheckCircle,
   XCircle,
+  Package,
   DollarSign,
   Edit,
   Trash2,
@@ -50,7 +51,7 @@ const PackageManagement = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <Header title="Package Management" icon={DollarSign} />
+      <Header title="Package Management" icon={Package} />
 
       {/* Package Management Content */}
       <div className="p-3 sm:p-4 md:p-6 lg:p-8">
@@ -179,7 +180,9 @@ const PackageManagement = () => {
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h4 className="text-sm font-medium text-gray-900">{pkg.name}</h4>
+                        <h4 className="text-sm font-medium text-gray-900">
+                          {pkg.name}
+                        </h4>
                         <span
                           className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusStyle(
                             pkg.status
@@ -190,13 +193,15 @@ const PackageManagement = () => {
                         </span>
                       </div>
                       <p className="text-xs text-gray-500 mb-1">ID: {pkg.id}</p>
-                      <p className="text-sm font-semibold text-gray-900">{pkg.price}</p>
+                      <p className="text-sm font-semibold text-gray-900">
+                        {pkg.price}
+                      </p>
                     </div>
                     <button className="text-gray-400 hover:text-gray-600">
                       <MoreVertical className="w-4 h-4" />
                     </button>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-4 text-xs text-gray-600">
                     <div>
                       <span className="font-medium">Validity:</span>
@@ -204,7 +209,9 @@ const PackageManagement = () => {
                     </div>
                     <div>
                       <span className="font-medium">Total Users:</span>
-                      <p className="mt-1 font-semibold text-gray-900">{pkg.totalUser}</p>
+                      <p className="mt-1 font-semibold text-gray-900">
+                        {pkg.totalUser}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -220,7 +227,9 @@ const PackageManagement = () => {
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-2">
-                        <h4 className="text-sm font-medium text-gray-900">{pkg.name}</h4>
+                        <h4 className="text-sm font-medium text-gray-900">
+                          {pkg.name}
+                        </h4>
                         <button className="text-gray-400 hover:text-gray-600">
                           <MoreVertical className="w-4 h-4" />
                         </button>
@@ -235,7 +244,7 @@ const PackageManagement = () => {
                       </span>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2 text-xs text-gray-600">
                     <div className="flex justify-between">
                       <span className="font-medium">Package ID:</span>
@@ -243,15 +252,21 @@ const PackageManagement = () => {
                     </div>
                     <div className="flex justify-between">
                       <span className="font-medium">Price:</span>
-                      <span className="font-semibold text-gray-900">{pkg.price}</span>
+                      <span className="font-semibold text-gray-900">
+                        {pkg.price}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="font-medium">Total Users:</span>
-                      <span className="font-semibold text-gray-900">{pkg.totalUser}</span>
+                      <span className="font-semibold text-gray-900">
+                        {pkg.totalUser}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="font-medium">Validity:</span>
-                      <span className="text-gray-900 text-right max-w-[60%]">{pkg.validity}</span>
+                      <span className="text-gray-900 text-right max-w-[60%]">
+                        {pkg.validity}
+                      </span>
                     </div>
                   </div>
                 </div>

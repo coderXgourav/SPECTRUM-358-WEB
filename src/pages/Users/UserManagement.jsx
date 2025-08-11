@@ -250,7 +250,9 @@ const UserManagement = () => {
                         {getInitials(user.name)}
                       </div>
                       <div className="ml-3 flex-1">
-                        <h4 className="text-sm font-medium text-gray-900">{user.name}</h4>
+                        <h4 className="text-sm font-medium text-gray-900">
+                          {user.name}
+                        </h4>
                         <p className="text-sm text-gray-500">{user.email}</p>
                         <p className="text-xs text-gray-500">{user.phone}</p>
                       </div>
@@ -271,10 +273,12 @@ const UserManagement = () => {
                   </div>
                   <div className="mt-2 grid grid-cols-2 gap-4 text-xs text-gray-600">
                     <div>
-                      <span className="font-medium">Package:</span> {user.package}
+                      <span className="font-medium">Package:</span>{" "}
+                      {user.package}
                     </div>
                     <div>
-                      <span className="font-medium">Joining:</span> {user.joiningDate}
+                      <span className="font-medium">Joining:</span>{" "}
+                      {user.joiningDate}
                     </div>
                   </div>
                 </div>
@@ -297,7 +301,9 @@ const UserManagement = () => {
                         {getInitials(user.name)}
                       </div>
                       <div className="ml-2">
-                        <h4 className="text-sm font-medium text-gray-900">{user.name}</h4>
+                        <h4 className="text-sm font-medium text-gray-900">
+                          {user.name}
+                        </h4>
                         <span
                           className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getStatusStyle(
                             user.status
@@ -317,7 +323,7 @@ const UserManagement = () => {
                       </button>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-1 text-xs text-gray-600">
                     <div className="flex justify-between">
                       <span className="font-medium">Email:</span>
@@ -353,7 +359,7 @@ const UserManagement = () => {
           />
 
           {/* Modal */}
-          <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-2xl max-h-[90vh] overflow-y-auto">
+          <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl xl:max-w-2xl max-h-[90vh] overflow-y-auto hide-scrollbar">
             {/* Close button */}
             <button
               onClick={() => setShowAddUserModal(false)}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Menu, Search, Bell, ChevronDown } from "lucide-react";
+import { Menu,Settings , Search, Bell, ChevronDown } from "lucide-react";
 import Header from "../components/Header";
 
 const SecuritySettings = () => {
@@ -99,7 +99,7 @@ const SecuritySettings = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <Header title="Security Settings" icon={Menu} />
+      <Header title="Security Settings" icon={Settings } />
 
       {/* Main Content */}
       <div className="p-4 sm:p-6 lg:p-6">
