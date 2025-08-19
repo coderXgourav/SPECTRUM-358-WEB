@@ -9,9 +9,9 @@ const RichTextDisplay = ({
 }) => {
   if (!content) return null;
 
-  // Convert simple markdown to HTML
+  // Convert simple markdown to HTML (matching RichTextEditor logic)
   const markdownToHtml = (text) => {
-    return text
+    let html = text
       .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold
       .replace(/\*(.*?)\*/g, "<em>$1</em>") // Italic
       .replace(/### (.*?)(\n|$)/g, "<h3>$1</h3>") // H3
@@ -26,6 +26,11 @@ const RichTextDisplay = ({
       .replace(/^> (.*?)$/gm, "<blockquote>$1</blockquote>") // Quotes
       .replace(/`(.*?)`/g, "<code>$1</code>") // Inline code
       .replace(/\n/g, "<br>"); // Line breaks
+
+    // Wrap consecutive list items in ul tags (improved logic)
+    html = html.replace(/(<li>.*?<\/li>)(\s*<li>.*?<\/li>)*/g, "<ul>$&</ul>");
+
+    return html;
   };
 
   // Sanitize the content for safe rendering
@@ -88,22 +93,97 @@ const RichTextDisplay = ({
     const htmlContent = hasMarkdown
       ? markdownToHtml(displayContent)
       : displayContent;
-    const wrappedContent = htmlContent.replace(
-      /(<li>.*?<\/li>)(\s*<li>.*?<\/li>)*/g,
-      "<ul>$&</ul>"
-    );
 
     return (
-      <div
-        className={`rich-text-display prose prose-sm max-w-none ${className}`}
-        dangerouslySetInnerHTML={{
-          __html: sanitizeContent(wrappedContent),
-        }}
-        style={{
-          wordBreak: "break-word",
-          lineHeight: "1.5",
-        }}
-      />
+      <>
+        <div
+          className={`rich-text-display prose prose-sm max-w-none ${className}`}
+          dangerouslySetInnerHTML={{
+            __html: sanitizeContent(htmlContent),
+          }}
+          style={{
+            wordBreak: "break-word",
+            lineHeight: "1.5",
+          }}
+        />
+
+        {/* Inline styling for proper display */}
+        <style>{`
+          .rich-text-display.prose h1,
+          .rich-text-display.prose h2,
+          .rich-text-display.prose h3 {
+            margin-top: 0.5rem !important;
+            margin-bottom: 0.5rem !important;
+            font-weight: 600 !important;
+            color: #111827 !important;
+          }
+          
+          .rich-text-display.prose h1 {
+            font-size: 1.25rem !important;
+          }
+          
+          .rich-text-display.prose h2 {
+            font-size: 1.125rem !important;
+          }
+          
+          .rich-text-display.prose h3 {
+            font-size: 1rem !important;
+          }
+          
+          .rich-text-display.prose p {
+            margin-bottom: 0.5rem !important;
+            color: #374151 !important;
+          }
+          
+          .rich-text-display.prose ul {
+            margin: 0.5rem 0 !important;
+            padding-left: 1.25rem !important;
+            list-style-type: disc !important;
+          }
+          
+          .rich-text-display.prose li {
+            margin-bottom: 0.25rem !important;
+            color: #374151 !important;
+            display: list-item !important;
+          }
+          
+          .rich-text-display.prose strong {
+            font-weight: 600 !important;
+            color: #111827 !important;
+          }
+          
+          .rich-text-display.prose em {
+            font-style: italic !important;
+          }
+          
+          .rich-text-display.prose a {
+            color: #E5B700 !important;
+            text-decoration: underline !important;
+            cursor: pointer !important;
+          }
+          
+          .rich-text-display.prose a:hover {
+            color: #d97706 !important;
+          }
+          
+          .rich-text-display.prose code {
+            background-color: #f3f4f6 !important;
+            padding: 0.125rem 0.25rem !important;
+            border-radius: 0.25rem !important;
+            font-size: 0.875rem !important;
+            color: #374151 !important;
+            font-family: 'Courier New', monospace !important;
+          }
+          
+          .rich-text-display.prose blockquote {
+            border-left: 4px solid #E5B700 !important;
+            padding-left: 1rem !important;
+            margin: 0.5rem 0 !important;
+            color: #6b7280 !important;
+            font-style: italic !important;
+          }
+        `}</style>
+      </>
     );
   }
 
