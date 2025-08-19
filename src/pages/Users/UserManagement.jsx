@@ -62,13 +62,19 @@ const UserManagement = () => {
       setFetchingUsers(true);
       const response = await authService.getUsers();
       if (response.users) {
-        // Show ALL users - no filtering by role
+        // Filter out admin users so only regular users are shown
+        const nonAdminUsers = response.users.filter((u) => {
+          // include user if role is not explicitly 'admin' (case-insensitive)
+          return !(u.role && String(u.role).toLowerCase() === "admin");
+        });
+
         // Sort by creation date descending (newest first)
-        const sortedUsers = response.users.sort((a, b) => {
+        const sortedUsers = nonAdminUsers.sort((a, b) => {
           const dateA = new Date(a.createdAt || 0);
           const dateB = new Date(b.createdAt || 0);
           return dateB - dateA; // Descending order (newest first)
         });
+
         setUsers(sortedUsers);
       }
     } catch (error) {
