@@ -97,7 +97,7 @@ const UserManagement = () => {
             year: "numeric",
           })
         : "Unknown",
-      status: user.isActive ? "Active" : "Inactive",
+      status: user.isActive !== false ? "Active" : "Inactive", // Default to Active if not explicitly false
       profilePicture: user.profilePicture,
       role: user.role,
     };
