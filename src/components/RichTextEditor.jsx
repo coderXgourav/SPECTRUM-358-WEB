@@ -1,210 +1,295 @@
-import React, { useState, useEffect } from "react";
-import MDEditor from "@uiw/react-md-editor";
-import "@uiw/react-md-editor/markdown-editor.css";
-import "@uiw/react-markdown-preview/markdown.css";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  Bold,
+  Italic,
+  List,
+  ListOrdered,
+  Link,
+  Quote,
+  Code,
+  Type,
+  Eye,
+  Edit,
+} from "lucide-react";
 
 const RichTextEditor = ({
   value = "",
   onChange,
   placeholder = "Enter description...",
   height = 200,
-  preview = "edit",
   className = "",
   required = false,
 }) => {
-  const [editorValue, setEditorValue] = useState(value);
+  const [content, setContent] = useState(value);
+  const [isPreview, setIsPreview] = useState(false);
+  const textareaRef = useRef(null);
 
   useEffect(() => {
-    setEditorValue(value);
+    setContent(value);
   }, [value]);
 
-  const handleChange = (val) => {
-    setEditorValue(val || "");
+  const handleChange = (e) => {
+    const newContent = e.target.value;
+    setContent(newContent);
     if (onChange) {
-      onChange(val || "");
+      onChange(newContent);
     }
   };
 
-  const customCommands = [
+  const insertText = (before, after = "") => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = content.substring(start, end);
+    const newText =
+      content.substring(0, start) +
+      before +
+      selectedText +
+      after +
+      content.substring(end);
+
+    setContent(newText);
+    if (onChange) {
+      onChange(newText);
+    }
+
+    // Restore cursor position
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(
+        start + before.length,
+        start + before.length + selectedText.length
+      );
+    }, 0);
+  };
+
+  const toolbarButtons = [
     {
-      name: "bold",
-      keyCommand: "bold",
-      buttonProps: { "aria-label": "Bold" },
-      icon: <span style={{ fontWeight: "bold" }}>B</span>,
+      icon: <Bold size={16} />,
+      title: "Bold",
+      action: () => insertText("**", "**"),
     },
     {
-      name: "italic",
-      keyCommand: "italic",
-      buttonProps: { "aria-label": "Italic" },
-      icon: <span style={{ fontStyle: "italic" }}>I</span>,
+      icon: <Italic size={16} />,
+      title: "Italic",
+      action: () => insertText("*", "*"),
     },
     {
-      name: "unorderedListCommand",
-      keyCommand: "unorderedListCommand",
-      buttonProps: { "aria-label": "Unordered List" },
-      icon: <span>•</span>,
+      icon: <Type size={16} />,
+      title: "Heading",
+      action: () => insertText("### "),
     },
     {
-      name: "orderedListCommand",
-      keyCommand: "orderedListCommand",
-      buttonProps: { "aria-label": "Ordered List" },
-      icon: <span>1.</span>,
+      icon: <List size={16} />,
+      title: "Bullet List",
+      action: () => insertText("- "),
     },
     {
-      name: "link",
-      keyCommand: "link",
-      buttonProps: { "aria-label": "Link" },
-      icon: <span>🔗</span>,
+      icon: <ListOrdered size={16} />,
+      title: "Numbered List",
+      action: () => insertText("1. "),
+    },
+    {
+      icon: <Link size={16} />,
+      title: "Link",
+      action: () => insertText("[Link Text](", ")"),
+    },
+    {
+      icon: <Quote size={16} />,
+      title: "Quote",
+      action: () => insertText("> "),
+    },
+    {
+      icon: <Code size={16} />,
+      title: "Code",
+      action: () => insertText("`", "`"),
     },
   ];
 
+  const renderPreview = (text) => {
+    // Simple markdown to HTML conversion
+    let html = text
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold
+      .replace(/\*(.*?)\*/g, "<em>$1</em>") // Italic
+      .replace(/### (.*?)(\n|$)/g, "<h3>$1</h3>") // H3
+      .replace(/## (.*?)(\n|$)/g, "<h2>$1</h2>") // H2
+      .replace(/# (.*?)(\n|$)/g, "<h1>$1</h1>") // H1
+      .replace(/^\- (.*?)$/gm, "<li>$1</li>") // Bullet points
+      .replace(/^\d+\. (.*?)$/gm, "<li>$1</li>") // Numbered list
+      .replace(
+        /\[([^\]]+)\]\(([^)]+)\)/g,
+        '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
+      ) // Links
+      .replace(/^> (.*?)$/gm, "<blockquote>$1</blockquote>") // Quotes
+      .replace(/`(.*?)`/g, "<code>$1</code>") // Inline code
+      .replace(/\n/g, "<br>"); // Line breaks
+
+    // Wrap consecutive list items in ul tags
+    html = html.replace(/(<li>.*?<\/li>)(\s*<li>.*?<\/li>)*/g, "<ul>$&</ul>");
+
+    return html;
+  };
+
   return (
-    <div className={`rich-text-editor ${className}`}>
-      <style jsx>{`
-        .rich-text-editor .w-md-editor {
-          background-color: white;
-          border: 1px solid #d1d5db;
-          border-radius: 0.5rem;
-          overflow: hidden;
-        }
+    <div
+      className={`rich-text-editor border border-gray-300 rounded-lg overflow-hidden ${className}`}
+    >
+      {/* Toolbar */}
+      <div className="flex items-center justify-between bg-gray-50 border-b border-gray-200 px-3 py-2">
+        <div className="flex items-center space-x-1">
+          {toolbarButtons.map((button, index) => (
+            <button
+              key={index}
+              type="button"
+              onClick={button.action}
+              className="p-1.5 text-gray-600 hover:text-gray-800 hover:bg-gray-200 rounded transition-colors"
+              title={button.title}
+            >
+              {button.icon}
+            </button>
+          ))}
+        </div>
+        <div className="flex items-center space-x-1">
+          <button
+            type="button"
+            onClick={() => setIsPreview(false)}
+            className={`p-1.5 rounded transition-colors ${
+              !isPreview
+                ? "text-[#E5B700] bg-yellow-50"
+                : "text-gray-600 hover:text-gray-800 hover:bg-gray-200"
+            }`}
+            title="Edit"
+          >
+            <Edit size={16} />
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsPreview(true)}
+            className={`p-1.5 rounded transition-colors ${
+              isPreview
+                ? "text-[#E5B700] bg-yellow-50"
+                : "text-gray-600 hover:text-gray-800 hover:bg-gray-200"
+            }`}
+            title="Preview"
+          >
+            <Eye size={16} />
+          </button>
+        </div>
+      </div>
 
-        .rich-text-editor .w-md-editor:focus-within {
-          border-color: #e5b700;
-          box-shadow: 0 0 0 2px rgba(229, 183, 0, 0.1);
-        }
+      {/* Editor/Preview Area */}
+      <div style={{ height: `${height}px` }} className="relative">
+        {!isPreview ? (
+          <textarea
+            ref={textareaRef}
+            value={content}
+            onChange={handleChange}
+            placeholder={placeholder}
+            required={required}
+            className="w-full h-full p-3 resize-none border-none outline-none focus:ring-0 text-sm leading-relaxed"
+            style={{
+              fontSize: "14px",
+              lineHeight: "1.5",
+              fontFamily: "inherit",
+            }}
+          />
+        ) : (
+          <div
+            className="w-full h-full p-3 overflow-auto text-sm leading-relaxed prose prose-sm max-w-none"
+            dangerouslySetInnerHTML={{
+              __html:
+                renderPreview(content) ||
+                "<p class='text-gray-500'>Nothing to preview</p>",
+            }}
+            style={{
+              fontSize: "14px",
+              lineHeight: "1.5",
+            }}
+          />
+        )}
+      </div>
 
-        .rich-text-editor .w-md-editor-text-area,
-        .rich-text-editor .w-md-editor-text {
-          font-size: 0.875rem;
-          line-height: 1.25rem;
-          color: #374151;
-        }
+      {/* Character count */}
+      {content && (
+        <div className="px-3 py-1 bg-gray-50 border-t border-gray-200 text-xs text-gray-500 text-right">
+          {content.length} characters
+        </div>
+      )}
 
-        .rich-text-editor .w-md-editor-text-area::placeholder {
-          color: #9ca3af;
-        }
-
-        .rich-text-editor .w-md-editor-toolbar {
-          background-color: #f9fafb;
-          border-bottom: 1px solid #e5e7eb;
-          padding: 0.5rem;
-        }
-
-        .rich-text-editor .w-md-editor-toolbar-child > button {
-          color: #6b7280;
-          border: none;
-          background-color: transparent;
-          padding: 0.25rem 0.5rem;
-          border-radius: 0.25rem;
-          margin: 0 0.125rem;
-        }
-
-        .rich-text-editor .w-md-editor-toolbar-child > button:hover {
-          background-color: #e5e7eb;
-          color: #374151;
-        }
-
-        .rich-text-editor .w-md-editor-toolbar-child > button.active {
-          background-color: #e5b700;
-          color: white;
-        }
-
-        .rich-text-editor .wmde-markdown {
-          background-color: white;
-          padding: 0.75rem;
-          font-size: 0.875rem;
-          line-height: 1.5;
-        }
-
-        .rich-text-editor .wmde-markdown h1,
-        .rich-text-editor .wmde-markdown h2,
-        .rich-text-editor .wmde-markdown h3,
-        .rich-text-editor .wmde-markdown h4,
-        .rich-text-editor .wmde-markdown h5,
-        .rich-text-editor .wmde-markdown h6 {
-          color: #111827;
-          margin-top: 1rem;
+      {/* Styling for preview content */}
+      <style>{`
+        .rich-text-editor .prose h1,
+        .rich-text-editor .prose h2,
+        .rich-text-editor .prose h3 {
+          margin-top: 0.5rem;
           margin-bottom: 0.5rem;
-        }
-
-        .rich-text-editor .wmde-markdown p {
-          margin-bottom: 0.75rem;
-          color: #374151;
-        }
-
-        .rich-text-editor .wmde-markdown ul,
-        .rich-text-editor .wmde-markdown ol {
-          margin-bottom: 0.75rem;
-          padding-left: 1.5rem;
-        }
-
-        .rich-text-editor .wmde-markdown li {
-          margin-bottom: 0.25rem;
-          color: #374151;
-        }
-
-        .rich-text-editor .wmde-markdown strong {
           font-weight: 600;
           color: #111827;
         }
-
-        .rich-text-editor .wmde-markdown em {
+        
+        .rich-text-editor .prose h1 {
+          font-size: 1.25rem;
+        }
+        
+        .rich-text-editor .prose h2 {
+          font-size: 1.125rem;
+        }
+        
+        .rich-text-editor .prose h3 {
+          font-size: 1rem;
+        }
+        
+        .rich-text-editor .prose p {
+          margin-bottom: 0.5rem;
+          color: #374151;
+        }
+        
+        .rich-text-editor .prose ul {
+          margin: 0.5rem 0;
+          padding-left: 1.25rem;
+        }
+        
+        .rich-text-editor .prose li {
+          margin-bottom: 0.25rem;
+          color: #374151;
+        }
+        
+        .rich-text-editor .prose strong {
+          font-weight: 600;
+          color: #111827;
+        }
+        
+        .rich-text-editor .prose em {
           font-style: italic;
         }
-
-        .rich-text-editor .wmde-markdown a {
-          color: #e5b700;
+        
+        .rich-text-editor .prose a {
+          color: #E5B700;
           text-decoration: underline;
         }
-
-        .rich-text-editor .wmde-markdown a:hover {
+        
+        .rich-text-editor .prose a:hover {
           color: #d97706;
         }
-
-        .rich-text-editor .wmde-markdown code {
+        
+        .rich-text-editor .prose code {
           background-color: #f3f4f6;
           padding: 0.125rem 0.25rem;
           border-radius: 0.25rem;
-          font-size: 0.8125rem;
+          font-size: 0.875rem;
           color: #374151;
         }
-
-        .rich-text-editor .wmde-markdown pre {
-          background-color: #f3f4f6;
-          padding: 0.75rem;
-          border-radius: 0.375rem;
-          margin-bottom: 0.75rem;
-          overflow-x: auto;
-        }
-
-        .rich-text-editor .wmde-markdown blockquote {
-          border-left: 4px solid #e5b700;
+        
+        .rich-text-editor .prose blockquote {
+          border-left: 4px solid #E5B700;
           padding-left: 1rem;
-          margin: 0.75rem 0;
+          margin: 0.5rem 0;
           color: #6b7280;
           font-style: italic;
         }
       `}</style>
-
-      <MDEditor
-        value={editorValue}
-        onChange={handleChange}
-        preview={preview}
-        height={height}
-        data-color-mode="light"
-        textareaProps={{
-          placeholder: placeholder,
-          required: required,
-          style: {
-            fontSize: "14px",
-            lineHeight: "1.5",
-            fontFamily: "inherit",
-          },
-        }}
-        commands={customCommands}
-        extraCommands={[]}
-        visibleDragBar={false}
-      />
     </div>
   );
 };

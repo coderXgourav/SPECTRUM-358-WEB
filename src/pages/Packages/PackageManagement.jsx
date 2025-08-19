@@ -744,7 +744,6 @@ const PackageManagement = () => {
                     }
                     placeholder="Enter Package Description with rich formatting..."
                     height={150}
-                    preview="edit"
                     required
                   />
                 </div>
@@ -948,7 +947,6 @@ const PackageManagement = () => {
                     }
                     placeholder="Enter Package Description with rich formatting..."
                     height={150}
-                    preview="edit"
                     required
                   />
                 </div>
