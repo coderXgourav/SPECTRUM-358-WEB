@@ -229,10 +229,8 @@ const SettingsPage = () => {
                   <input
                     type="email"
                     value={profileData.email}
-                    onChange={(e) =>
-                      setProfileData({ ...profileData, email: e.target.value })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                    disabled
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs sm:text-sm bg-gray-100 text-gray-500 cursor-not-allowed opacity-60"
                   />
                 </div>
 
