@@ -333,7 +333,7 @@ const PackageManagement = () => {
         </div>
 
         {/* Package Table/Cards */}
-        <div className="bg-white rounded-lg shadow">
+        <div className="bg-white rounded-lg shadow overflow-visible">
           <div className="p-3 sm:p-4 md:p-6 border-b">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
               <div>
@@ -355,7 +355,7 @@ const PackageManagement = () => {
           </div>
 
           {/* Desktop Table View */}
-          <div className="hidden lg:block overflow-x-auto">
+          <div className="hidden lg:block overflow-x-auto overflow-y-visible">
             <table className="w-full">
               <thead>
                 <tr className="border-b bg-gray-50">
@@ -445,7 +445,7 @@ const PackageManagement = () => {
                           </button>
 
                           {openDropdown === (pkg.packageId || pkg.id) && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-[60] border border-gray-200">
+                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-[9999] border border-gray-200">
                               <div className="py-1">
                                 <button
                                   onClick={() => handleEditPackage(pkg)}
@@ -512,7 +512,7 @@ const PackageManagement = () => {
                       </button>
 
                       {openDropdown === (pkg.packageId || pkg.id) && (
-                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-[60] border border-gray-200">
+                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-[9999] border border-gray-200">
                           <div className="py-1">
                             <button
                               onClick={() => handleEditPackage(pkg)}
@@ -575,7 +575,7 @@ const PackageManagement = () => {
                           </button>
 
                           {openDropdown === (pkg.packageId || pkg.id) && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-[60] border border-gray-200">
+                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-[9999] border border-gray-200">
                               <div className="py-1">
                                 <button
                                   onClick={() => handleEditPackage(pkg)}
