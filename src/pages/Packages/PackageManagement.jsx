@@ -17,6 +17,8 @@ import {
 import Header from "../../components/Header";
 import { packageService } from "../../services/api";
 import Toast from "../../components/Toast";
+import RichTextEditor from "../../components/RichTextEditor";
+import RichTextDisplay from "../../components/RichTextDisplay";
 
 const PackageManagement = () => {
   const [showCreatePackageModal, setShowCreatePackageModal] = useState(false);
@@ -366,6 +368,9 @@ const PackageManagement = () => {
                     Package Name
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Description
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Price
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -386,7 +391,7 @@ const PackageManagement = () => {
                 {loading ? (
                   <tr>
                     <td
-                      colSpan="7"
+                      colSpan="8"
                       className="px-6 py-8 text-center text-gray-500"
                     >
                       Loading packages...
@@ -395,7 +400,7 @@ const PackageManagement = () => {
                 ) : packages.length === 0 ? (
                   <tr>
                     <td
-                      colSpan="7"
+                      colSpan="8"
                       className="px-6 py-8 text-center text-gray-500"
                     >
                       No packages found. Create your first package to get
@@ -413,6 +418,13 @@ const PackageManagement = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {pkg.name}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-900 max-w-xs">
+                        <RichTextDisplay
+                          content={pkg.description}
+                          maxLength={100}
+                          className="text-sm"
+                        />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
                         {pkg.price}
@@ -722,18 +734,18 @@ const PackageManagement = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
                     Description *
                   </label>
-                  <textarea
-                    placeholder="Enter Package Description"
+                  <RichTextEditor
                     value={createPackageData.description}
-                    onChange={(e) =>
+                    onChange={(value) =>
                       setCreatePackageData({
                         ...createPackageData,
-                        description: e.target.value,
+                        description: value,
                       })
                     }
+                    placeholder="Enter Package Description with rich formatting..."
+                    height={150}
+                    preview="edit"
                     required
-                    rows={3}
-                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
                   />
                 </div>
 
@@ -926,18 +938,18 @@ const PackageManagement = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
                     Description *
                   </label>
-                  <textarea
-                    placeholder="Enter Package Description"
+                  <RichTextEditor
                     value={editingPackage.description}
-                    onChange={(e) =>
+                    onChange={(value) =>
                       setEditingPackage({
                         ...editingPackage,
-                        description: e.target.value,
+                        description: value,
                       })
                     }
+                    placeholder="Enter Package Description with rich formatting..."
+                    height={150}
+                    preview="edit"
                     required
-                    rows={3}
-                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
                   />
                 </div>
 

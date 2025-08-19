@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
+    "@uiw/react-md-editor": "^4.0.8",
     "dom": "^0.0.3",
+    "dompurify": "^3.2.6",
     "firebase": "^10.14.1",
     "lucide-react": "^0.536.0",
     "react": "^19.1.1",
