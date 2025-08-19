@@ -12,6 +12,7 @@ export const API_ENDPOINTS = {
     LOGOUT: `${API_BASE_URL}/api/auth/logout`,
     PROFILE: (uid) => `${API_BASE_URL}/api/auth/profile/${uid}`,
     USERS: `${API_BASE_URL}/api/auth/users`,
+    USERS_STATS: `${API_BASE_URL}/api/auth/users/stats`,
     DELETE_USER: (userId) => `${API_BASE_URL}/api/auth/users/${userId}`,
     UPDATE_USER: (userId) => `${API_BASE_URL}/api/auth/users/${userId}`,
     FORGOT_PASSWORD: `${API_BASE_URL}/api/auth/forgot-password`,

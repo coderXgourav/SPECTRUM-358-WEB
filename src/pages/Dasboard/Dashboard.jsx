@@ -14,7 +14,7 @@ import {
   Home,
 } from "lucide-react";
 import Header from "../../components/Header";
-import { ticketService } from "../../services/api";
+import { ticketService, authService } from "../../services/api";
 
 const Dashboard = () => {
   const [timeFilter, setTimeFilter] = useState("12 months");
@@ -24,6 +24,11 @@ const Dashboard = () => {
     total: 0,
     active: 0,
     closed: 0,
+  });
+  const [userStats, setUserStats] = useState({
+    totalUsers: 0,
+    activeUsers: 0,
+    inactiveUsers: 0,
   });
 
   // Sample chart data - unchanged
@@ -83,13 +88,23 @@ const Dashboard = () => {
   React.useEffect(() => {
     const fetchStats = async () => {
       try {
-        const data = await ticketService.getStats();
+        // Fetch ticket stats
+        const ticketData = await ticketService.getStats();
         setTicketStats({
-          total: data.total || 0,
-          active: data.active || 0,
-          closed: data.closed || 0,
+          total: ticketData.total || 0,
+          active: ticketData.active || 0,
+          closed: ticketData.closed || 0,
+        });
+
+        // Fetch user stats
+        const userData = await authService.getUserStats();
+        setUserStats({
+          totalUsers: userData.stats?.totalUsers || 0,
+          activeUsers: userData.stats?.activeUsers || 0,
+          inactiveUsers: userData.stats?.inactiveUsers || 0,
         });
       } catch (e) {
+        console.error("Error fetching stats:", e);
         // Optionally handle error
       }
     };
@@ -128,13 +143,13 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mb-4 sm:mb-6">
           <StatCard
             title="Total User"
-            value="22,653"
+            value={userStats.totalUsers.toLocaleString()}
             icon={<Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#E5B700]" />}
             bgColor="bg-[#011F3F]"
           />
           <StatCard
             title="Active User"
-            value="3,671"
+            value={userStats.activeUsers.toLocaleString()}
             icon={<Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#E5B700]" />}
             bgColor="bg-[#011F3F]"
           />

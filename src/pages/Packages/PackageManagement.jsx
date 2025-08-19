@@ -445,7 +445,7 @@ const PackageManagement = () => {
                           </button>
 
                           {openDropdown === (pkg.packageId || pkg.id) && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border">
+                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 border">
                               <div className="py-1">
                                 <button
                                   onClick={() => handleEditPackage(pkg)}
@@ -512,7 +512,7 @@ const PackageManagement = () => {
                       </button>
 
                       {openDropdown === (pkg.packageId || pkg.id) && (
-                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border">
+                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 border">
                           <div className="py-1">
                             <button
                               onClick={() => handleEditPackage(pkg)}
@@ -575,7 +575,7 @@ const PackageManagement = () => {
                           </button>
 
                           {openDropdown === (pkg.packageId || pkg.id) && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border">
+                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 border">
                               <div className="py-1">
                                 <button
                                   onClick={() => handleEditPackage(pkg)}

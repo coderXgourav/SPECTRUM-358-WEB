@@ -91,6 +91,11 @@ export const authService = {
     return apiCall(API_ENDPOINTS.AUTH.USERS);
   },
 
+  // Get user statistics
+  getUserStats: async () => {
+    return apiCall(API_ENDPOINTS.AUTH.USERS_STATS);
+  },
+
   // Delete user (admin only)
   deleteUser: async (userId) => {
     return apiCall(API_ENDPOINTS.AUTH.DELETE_USER(userId), {
