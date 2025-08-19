@@ -355,7 +355,7 @@ const PackageManagement = () => {
           </div>
 
           {/* Desktop Table View */}
-          <div className="hidden lg:block overflow-x-auto overflow-y-visible">
+          <div className="hidden lg:block overflow-x-auto overflow-y-visible relative">
             <table className="w-full">
               <thead>
                 <tr className="border-b bg-gray-50">
@@ -445,7 +445,7 @@ const PackageManagement = () => {
                           </button>
 
                           {openDropdown === (pkg.packageId || pkg.id) && (
-                            <div className="absolute right-0 bottom-full mb-1 w-48 bg-white rounded-md shadow-xl z-[9999] border border-gray-200">
+                            <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-md shadow-xl z-[9999] border border-gray-200 transform -translate-y-2">
                               <div className="py-1">
                                 <button
                                   onClick={() => handleEditPackage(pkg)}
@@ -512,7 +512,7 @@ const PackageManagement = () => {
                       </button>
 
                       {openDropdown === (pkg.packageId || pkg.id) && (
-                        <div className="absolute right-0 bottom-full mb-1 w-48 bg-white rounded-md shadow-xl z-[9999] border border-gray-200">
+                        <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-md shadow-xl z-[9999] border border-gray-200 transform -translate-y-2">
                           <div className="py-1">
                             <button
                               onClick={() => handleEditPackage(pkg)}
@@ -575,7 +575,7 @@ const PackageManagement = () => {
                           </button>
 
                           {openDropdown === (pkg.packageId || pkg.id) && (
-                            <div className="absolute right-0 bottom-full mb-1 w-48 bg-white rounded-md shadow-xl z-[9999] border border-gray-200">
+                            <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-md shadow-xl z-[9999] border border-gray-200 transform -translate-y-2">
                               <div className="py-1">
                                 <button
                                   onClick={() => handleEditPackage(pkg)}
