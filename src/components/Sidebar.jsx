@@ -11,11 +11,16 @@ import {
   LayoutDashboard,
   UserCog,
 } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
+
+  // Debug user data
+  console.log("Sidebar: User data from AuthContext:", user);
 
   const sidebarItems = [
     {
@@ -171,9 +176,13 @@ const Sidebar = () => {
     },
   ];
 
-  const handleLogout = () => {
-    // Add your logout logic here
-    console.log("Logging out...");
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   const toggleMobileMenu = () => {
@@ -290,18 +299,32 @@ const Sidebar = () => {
             onClick={() => handleNavigate("/profile")}
           >
             <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-[#E5B700]/20">
-              <img
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80"
-                alt="Martin Harris"
-                className="w-full h-full object-cover"
-              />
+              {user ? (
+                <img
+                  src={
+                    user.profilePicture ||
+                    `https://i.pravatar.cc/48?u=${user.email}`
+                  }
+                  alt={
+                    `${user.firstName || ""} ${user.lastName || ""}`.trim() ||
+                    user.email
+                  }
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-[#E5B700] to-[#F7931E] flex items-center justify-center">
+                  <User className="w-6 h-6 text-white" />
+                </div>
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-base poppins-semibold text-gray-800 truncate">
-                Martin Harris
+                {`${user?.firstName || ""} ${user?.lastName || ""}`.trim() ||
+                  user?.email?.split("@")[0] ||
+                  "User"}
               </p>
               <p className="text-sm poppins-regular text-gray-500 truncate">
-                Administrator
+                {user?.role || "User"}
               </p>
             </div>
           </div>

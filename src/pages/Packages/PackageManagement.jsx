@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Search,
   Bell,
@@ -15,27 +15,262 @@ import {
   Trash2,
 } from "lucide-react";
 import Header from "../../components/Header";
+import { packageService } from "../../services/api";
+import Toast from "../../components/Toast";
 
 const PackageManagement = () => {
   const [showCreatePackageModal, setShowCreatePackageModal] = useState(false);
-  const [packages, setPackages] = useState([
-    {
-      id: "PKG-455702",
-      name: "Silver Package",
-      price: "$ 49.00",
-      validity: "01 Jul 2025 - 28 Aug 2026",
-      status: "Active",
-      totalUser: "3,480",
-    },
-    {
-      id: "PKG-451002",
-      name: "Gold Package",
-      price: "$59.00",
-      validity: "20 Aug 2025 - 28 Aug 2026",
-      status: "Expiring Soon",
-      totalUser: "2,400",
-    },
-  ]);
+  const [packages, setPackages] = useState([]);
+  const [stats, setStats] = useState({
+    activePackages: 0,
+    expiredPackages: 0,
+    expiringSoon: 0,
+    totalRevenue: "$0",
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [createPackageData, setCreatePackageData] = useState({
+    name: "",
+    description: "",
+    price: "",
+    duration: "1 year",
+    features: [],
+    category: "standard",
+    startDate: "",
+    endDate: "",
+  });
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingPackage, setEditingPackage] = useState(null);
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [packageToDelete, setPackageToDelete] = useState(null);
+
+  // Local toaster
+  const [toast, setToast] = useState({
+    visible: false,
+    message: "",
+    type: "success",
+  });
+  const showToast = (message, type = "success") => {
+    setToast({ visible: true, message, type });
+    window.clearTimeout(showToast._t);
+    showToast._t = window.setTimeout(() => {
+      setToast((t) => ({ ...t, visible: false }));
+    }, 3000);
+  };
+
+  // Fetch packages and stats on component mount
+  useEffect(() => {
+    fetchPackages();
+    fetchStats();
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (openDropdown && !event.target.closest(".dropdown-container")) {
+        setOpenDropdown(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [openDropdown]);
+
+  const fetchPackages = async () => {
+    try {
+      setLoading(true);
+      const response = await packageService.getPackages();
+      setPackages(response.packages || []);
+      if (response.stats) {
+        setStats(response.stats);
+      }
+      setError(null);
+    } catch (err) {
+      showToast(
+        "Failed to load packages. Please check your connection and try again.",
+        "error"
+      );
+      setError(
+        "Failed to load packages. Please check your connection and try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchStats = async () => {
+    try {
+      const response = await packageService.getPackageStats();
+      setStats(response.stats);
+    } catch (err) {
+      console.error("Error fetching stats:", err);
+    }
+  };
+
+  const handleCreatePackage = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+
+      // Validate required fields
+      if (
+        !createPackageData.name ||
+        !createPackageData.price ||
+        !createPackageData.description
+      ) {
+        setError("Please fill in all required fields");
+        return;
+      }
+
+      // Ensure price is a valid number
+      const price = parseFloat(createPackageData.price);
+      if (isNaN(price) || price <= 0) {
+        setError("Please enter a valid price");
+        return;
+      }
+
+      const packageData = {
+        ...createPackageData,
+        price: price,
+      };
+
+      await packageService.createPackage(packageData);
+      setShowCreatePackageModal(false);
+      setCreatePackageData({
+        name: "",
+        description: "",
+        price: "",
+        duration: "1 year",
+        features: [],
+        category: "standard",
+        startDate: "",
+        endDate: "",
+      });
+      setError(null);
+      await fetchPackages();
+      await fetchStats();
+      showToast("Package created successfully");
+    } catch (err) {
+      console.error("Error creating package:", err);
+      setError("Failed to create package. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEditPackage = (pkg) => {
+    setEditingPackage({
+      ...pkg,
+      price: pkg.price.replace("$", ""), // Remove $ sign for editing
+    });
+    setShowEditModal(true);
+    setOpenDropdown(null);
+  };
+
+  const handleDeletePackage = (pkg) => {
+    setPackageToDelete(pkg);
+    setShowDeleteConfirm(true);
+    setOpenDropdown(null);
+  };
+
+  const confirmDeletePackage = async () => {
+    if (!packageToDelete) return;
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      console.log(
+        "Deleting package:",
+        packageToDelete.packageId || packageToDelete.id
+      );
+
+      const response = await packageService.deletePackage(
+        packageToDelete.packageId || packageToDelete.id
+      );
+
+      console.log("Delete response:", response);
+
+      await fetchPackages();
+      await fetchStats();
+      setShowDeleteConfirm(false);
+      setPackageToDelete(null);
+
+      // Show success message (optional)
+      showToast("Package deleted successfully");
+    } catch (err) {
+      console.error("Error deleting package:", err);
+      setError(`Failed to delete package: ${err.message || "Unknown error"}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdatePackage = async (e) => {
+    e.preventDefault();
+    if (!editingPackage) return;
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Validate required fields
+      if (
+        !editingPackage.name ||
+        !editingPackage.price ||
+        !editingPackage.description
+      ) {
+        setError("Please fill in all required fields");
+        return;
+      }
+
+      // Ensure price is a valid number
+      const price = parseFloat(editingPackage.price);
+      if (isNaN(price) || price <= 0) {
+        setError("Please enter a valid price");
+        return;
+      }
+
+      const updateData = {
+        ...editingPackage,
+        price: price,
+      };
+
+      console.log(
+        "Updating package:",
+        editingPackage.packageId || editingPackage.id,
+        "with data:",
+        updateData
+      );
+
+      const response = await packageService.updatePackage(
+        editingPackage.packageId || editingPackage.id,
+        updateData
+      );
+
+      console.log("Update response:", response);
+
+      setShowEditModal(false);
+      setEditingPackage(null);
+
+      await fetchPackages();
+      await fetchStats();
+
+      showToast("Package updated successfully");
+    } catch (err) {
+      console.error("Error updating package:", err);
+      setError(`Failed to update package: ${err.message || "Unknown error"}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleDropdown = (packageId) => {
+    setOpenDropdown(openDropdown === packageId ? null : packageId);
+  };
 
   const getStatusStyle = (status) => {
     switch (status) {
@@ -49,34 +284,48 @@ const PackageManagement = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <Header title="Package Management" icon={Package} />
+      <Toast
+        visible={toast.visible}
+        message={toast.message}
+        type={toast.type}
+      />
 
       {/* Package Management Content */}
       <div className="p-3 sm:p-4 md:p-6 lg:p-8">
+        {/* Error Message */}
+        {error && (
+          <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            {error}
+          </div>
+        )}
+
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-4 sm:mb-6 lg:mb-8">
           <PackageStatCard
             title="Active Packages"
-            value="02"
+            value={
+              loading ? "..." : stats.activePackages.toString().padStart(2, "0")
+            }
             icon={
               <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
             }
           />
           <PackageStatCard
             title="Expired Packages"
-            value="1,200"
+            value={loading ? "..." : stats.expiredPackages.toLocaleString()}
             icon={<XCircle className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />}
           />
           <PackageStatCard
-            title="Upcoming Renewals"
-            value="3,653"
+            title="Expiring Soon"
+            value={loading ? "..." : stats.expiringSoon.toLocaleString()}
             icon={<Bell className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />}
           />
           <PackageStatCard
             title="Total Package Revenue"
-            value="$12,653"
+            value={loading ? "..." : stats.totalRevenue}
             icon={
               <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
             }
@@ -134,40 +383,92 @@ const PackageManagement = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {packages.map((pkg, index) => (
-                  <tr key={pkg.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {pkg.id}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {pkg.name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {pkg.price}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {pkg.validity}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusStyle(
-                          pkg.status
-                        )}`}
-                      >
-                        <span className="w-2 h-2 rounded-full bg-current mr-2"></span>
-                        {pkg.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {pkg.totalUser}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <button className="text-gray-400 hover:text-gray-600">
-                        <MoreVertical className="w-5 h-5" />
-                      </button>
+                {loading ? (
+                  <tr>
+                    <td
+                      colSpan="7"
+                      className="px-6 py-8 text-center text-gray-500"
+                    >
+                      Loading packages...
                     </td>
                   </tr>
-                ))}
+                ) : packages.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan="7"
+                      className="px-6 py-8 text-center text-gray-500"
+                    >
+                      No packages found. Create your first package to get
+                      started.
+                    </td>
+                  </tr>
+                ) : (
+                  packages.map((pkg, index) => (
+                    <tr
+                      key={pkg.packageId || pkg.id}
+                      className="hover:bg-gray-50"
+                    >
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {pkg.packageId || pkg.id}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {pkg.name}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                        {pkg.price}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {pkg.validity || pkg.validityPeriod}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusStyle(
+                            pkg.status
+                          )}`}
+                        >
+                          <span className="w-2 h-2 rounded-full bg-current mr-2"></span>
+                          {pkg.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                        {pkg.totalUser}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <div className="relative dropdown-container">
+                          <button
+                            onClick={() =>
+                              toggleDropdown(pkg.packageId || pkg.id)
+                            }
+                            className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100"
+                          >
+                            <MoreVertical className="w-5 h-5" />
+                          </button>
+
+                          {openDropdown === (pkg.packageId || pkg.id) && (
+                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border">
+                              <div className="py-1">
+                                <button
+                                  onClick={() => handleEditPackage(pkg)}
+                                  className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                >
+                                  <Edit className="w-4 h-4 mr-2" />
+                                  Edit Package
+                                </button>
+                                <button
+                                  onClick={() => handleDeletePackage(pkg)}
+                                  className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                                >
+                                  <Trash2 className="w-4 h-4 mr-2" />
+                                  Delete Package
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -176,7 +477,10 @@ const PackageManagement = () => {
           <div className="hidden md:block lg:hidden">
             <div className="divide-y divide-gray-200">
               {packages.map((pkg, index) => (
-                <div key={pkg.id} className="p-4 hover:bg-gray-50">
+                <div
+                  key={pkg.packageId || pkg.id}
+                  className="p-4 hover:bg-gray-50"
+                >
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
@@ -192,20 +496,50 @@ const PackageManagement = () => {
                           {pkg.status}
                         </span>
                       </div>
-                      <p className="text-xs text-gray-500 mb-1">ID: {pkg.id}</p>
+                      <p className="text-xs text-gray-500 mb-1">
+                        ID: {pkg.packageId || pkg.id}
+                      </p>
                       <p className="text-sm font-semibold text-gray-900">
                         {pkg.price}
                       </p>
                     </div>
-                    <button className="text-gray-400 hover:text-gray-600">
-                      <MoreVertical className="w-4 h-4" />
-                    </button>
+                    <div className="relative dropdown-container">
+                      <button
+                        onClick={() => toggleDropdown(pkg.packageId || pkg.id)}
+                        className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100"
+                      >
+                        <MoreVertical className="w-4 h-4" />
+                      </button>
+
+                      {openDropdown === (pkg.packageId || pkg.id) && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border">
+                          <div className="py-1">
+                            <button
+                              onClick={() => handleEditPackage(pkg)}
+                              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              <Edit className="w-4 h-4 mr-2" />
+                              Edit Package
+                            </button>
+                            <button
+                              onClick={() => handleDeletePackage(pkg)}
+                              className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                            >
+                              <Trash2 className="w-4 h-4 mr-2" />
+                              Delete Package
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 text-xs text-gray-600">
                     <div>
                       <span className="font-medium">Validity:</span>
-                      <p className="mt-1">{pkg.validity}</p>
+                      <p className="mt-1">
+                        {pkg.validity || pkg.validityPeriod}
+                      </p>
                     </div>
                     <div>
                       <span className="font-medium">Total Users:</span>
@@ -223,16 +557,44 @@ const PackageManagement = () => {
           <div className="block md:hidden">
             <div className="divide-y divide-gray-200">
               {packages.map((pkg, index) => (
-                <div key={pkg.id} className="p-3">
+                <div key={pkg.packageId || pkg.id} className="p-3">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="text-sm font-medium text-gray-900">
                           {pkg.name}
                         </h4>
-                        <button className="text-gray-400 hover:text-gray-600">
-                          <MoreVertical className="w-4 h-4" />
-                        </button>
+                        <div className="relative dropdown-container">
+                          <button
+                            onClick={() =>
+                              toggleDropdown(pkg.packageId || pkg.id)
+                            }
+                            className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100"
+                          >
+                            <MoreVertical className="w-4 h-4" />
+                          </button>
+
+                          {openDropdown === (pkg.packageId || pkg.id) && (
+                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border">
+                              <div className="py-1">
+                                <button
+                                  onClick={() => handleEditPackage(pkg)}
+                                  className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                >
+                                  <Edit className="w-4 h-4 mr-2" />
+                                  Edit Package
+                                </button>
+                                <button
+                                  onClick={() => handleDeletePackage(pkg)}
+                                  className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                                >
+                                  <Trash2 className="w-4 h-4 mr-2" />
+                                  Delete Package
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </div>
                       <span
                         className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getStatusStyle(
@@ -248,7 +610,9 @@ const PackageManagement = () => {
                   <div className="space-y-2 text-xs text-gray-600">
                     <div className="flex justify-between">
                       <span className="font-medium">Package ID:</span>
-                      <span className="text-gray-900">{pkg.id}</span>
+                      <span className="text-gray-900">
+                        {pkg.packageId || pkg.id}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="font-medium">Price:</span>
@@ -265,7 +629,7 @@ const PackageManagement = () => {
                     <div className="flex justify-between">
                       <span className="font-medium">Validity:</span>
                       <span className="text-gray-900 text-right max-w-[60%]">
-                        {pkg.validity}
+                        {pkg.validity || pkg.validityPeriod}
                       </span>
                     </div>
                   </div>
@@ -302,87 +666,394 @@ const PackageManagement = () => {
                   Create Package
                 </h2>
                 <p className="text-sm text-gray-500 mt-1">
-                  Update your photo and personal details.
+                  Create a new package with pricing and validity details.
                 </p>
               </div>
 
               {/* Form */}
-              <div className="space-y-5">
+              <form onSubmit={handleCreatePackage} className="space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Package ID
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Enter Package ID"
-                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Package Name
+                      Package Name *
                     </label>
                     <input
                       type="text"
                       placeholder="Enter Package Name"
-                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Price
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Enter Price"
+                      value={createPackageData.name}
+                      onChange={(e) =>
+                        setCreatePackageData({
+                          ...createPackageData,
+                          name: e.target.value,
+                        })
+                      }
+                      required
                       className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Validity
+                      Price *
                     </label>
-                    <input
-                      type="text"
-                      placeholder="Enter Validity Period"
-                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
-                    />
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                        $
+                      </span>
+                      <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        placeholder="0.00"
+                        value={createPackageData.price}
+                        onChange={(e) =>
+                          setCreatePackageData({
+                            ...createPackageData,
+                            price: e.target.value,
+                          })
+                        }
+                        required
+                        className="w-full pl-8 pr-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
+                      />
+                    </div>
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    Status
+                    Description *
                   </label>
-                  <div className="relative">
-                    <select className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-900 text-sm">
-                      <option>Active</option>
-                      <option>Inactive</option>
-                      <option>Expiring Soon</option>
-                    </select>
-                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                  <textarea
+                    placeholder="Enter Package Description"
+                    value={createPackageData.description}
+                    onChange={(e) =>
+                      setCreatePackageData({
+                        ...createPackageData,
+                        description: e.target.value,
+                      })
+                    }
+                    required
+                    rows={3}
+                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      Duration
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={createPackageData.duration}
+                        onChange={(e) =>
+                          setCreatePackageData({
+                            ...createPackageData,
+                            duration: e.target.value,
+                          })
+                        }
+                        className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-900 text-sm"
+                      >
+                        <option value="1 month">1 Month</option>
+                        <option value="3 months">3 Months</option>
+                        <option value="6 months">6 Months</option>
+                        <option value="1 year">1 Year</option>
+                        <option value="2 years">2 Years</option>
+                      </select>
+                      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      Category
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={createPackageData.category}
+                        onChange={(e) =>
+                          setCreatePackageData({
+                            ...createPackageData,
+                            category: e.target.value,
+                          })
+                        }
+                        className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-900 text-sm"
+                      >
+                        <option value="standard">Standard</option>
+                        <option value="premium">Premium</option>
+                        <option value="enterprise">Enterprise</option>
+                      </select>
+                      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      Start Date
+                    </label>
+                    <input
+                      type="date"
+                      value={createPackageData.startDate}
+                      onChange={(e) =>
+                        setCreatePackageData({
+                          ...createPackageData,
+                          startDate: e.target.value,
+                        })
+                      }
+                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      End Date
+                    </label>
+                    <input
+                      type="date"
+                      value={createPackageData.endDate}
+                      onChange={(e) =>
+                        setCreatePackageData({
+                          ...createPackageData,
+                          endDate: e.target.value,
+                        })
+                      }
+                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent text-sm"
+                    />
                   </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3 pt-4">
                   <button
-                    type="button"
-                    className="flex-1 py-2.5 bg-[#F5A623] text-white font-medium rounded-lg hover:bg-[#E59613] transition-colors text-sm order-2 sm:order-1"
+                    type="submit"
+                    disabled={loading}
+                    className="flex-1 py-2.5 bg-[#F5A623] text-white font-medium rounded-lg hover:bg-[#E59613] transition-colors text-sm order-2 sm:order-1 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Submit
+                    {loading ? "Creating..." : "Create Package"}
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowCreatePackageModal(false)}
-                    className="flex-1 py-2.5 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 transition-colors text-sm order-1 sm:order-2"
+                    disabled={loading}
+                    className="flex-1 py-2.5 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 transition-colors text-sm order-1 sm:order-2 disabled:opacity-50"
                   >
                     Cancel
                   </button>
                 </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Package Modal */}
+      {showEditModal && editingPackage && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop with blur */}
+          <div
+            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+            onClick={() => setShowEditModal(false)}
+          />
+
+          {/* Modal */}
+          <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl max-h-[90vh] overflow-y-auto">
+            {/* Close button */}
+            <button
+              onClick={() => setShowEditModal(false)}
+              className="absolute right-4 top-4 z-10 text-gray-400 hover:text-gray-600 transition-colors bg-white rounded-full p-1"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="p-4 sm:p-6 lg:p-8">
+              {/* Header */}
+              <div className="mb-6">
+                <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">
+                  Edit Package
+                </h2>
+                <p className="text-sm text-gray-500 mt-1">
+                  Update package details and pricing information.
+                </p>
+              </div>
+
+              {/* Form */}
+              <form onSubmit={handleUpdatePackage} className="space-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      Package Name *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter Package Name"
+                      value={editingPackage.name}
+                      onChange={(e) =>
+                        setEditingPackage({
+                          ...editingPackage,
+                          name: e.target.value,
+                        })
+                      }
+                      required
+                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      Price *
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
+                        $
+                      </span>
+                      <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        placeholder="0.00"
+                        value={editingPackage.price}
+                        onChange={(e) =>
+                          setEditingPackage({
+                            ...editingPackage,
+                            price: e.target.value,
+                          })
+                        }
+                        required
+                        className="w-full pl-8 pr-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    Description *
+                  </label>
+                  <textarea
+                    placeholder="Enter Package Description"
+                    value={editingPackage.description}
+                    onChange={(e) =>
+                      setEditingPackage({
+                        ...editingPackage,
+                        description: e.target.value,
+                      })
+                    }
+                    required
+                    rows={3}
+                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      Duration
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={editingPackage.duration}
+                        onChange={(e) =>
+                          setEditingPackage({
+                            ...editingPackage,
+                            duration: e.target.value,
+                          })
+                        }
+                        className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-900 text-sm"
+                      >
+                        <option value="1 month">1 Month</option>
+                        <option value="3 months">3 Months</option>
+                        <option value="6 months">6 Months</option>
+                        <option value="1 year">1 Year</option>
+                        <option value="2 years">2 Years</option>
+                      </select>
+                      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      Category
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={editingPackage.category}
+                        onChange={(e) =>
+                          setEditingPackage({
+                            ...editingPackage,
+                            category: e.target.value,
+                          })
+                        }
+                        className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-900 text-sm"
+                      >
+                        <option value="standard">Standard</option>
+                        <option value="premium">Premium</option>
+                        <option value="enterprise">Enterprise</option>
+                      </select>
+                      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3 pt-4">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex-1 py-2.5 bg-[#F5A623] text-white font-medium rounded-lg hover:bg-[#E59613] transition-colors text-sm order-2 sm:order-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {loading ? "Updating..." : "Update Package"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowEditModal(false)}
+                    disabled={loading}
+                    className="flex-1 py-2.5 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 transition-colors text-sm order-1 sm:order-2 disabled:opacity-50"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && packageToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop with blur */}
+          <div
+            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+            onClick={() => setShowDeleteConfirm(false)}
+          />
+
+          {/* Modal */}
+          <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-md">
+            <div className="p-6">
+              <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full">
+                <Trash2 className="w-6 h-6 text-red-600" />
+              </div>
+
+              <div className="text-center mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Delete Package
+                </h3>
+                <p className="text-sm text-gray-500">
+                  Are you sure you want to delete "{packageToDelete.name}"? This
+                  action cannot be undone.
+                </p>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  disabled={loading}
+                  className="flex-1 py-2.5 px-4 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors text-sm disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmDeletePackage}
+                  disabled={loading}
+                  className="flex-1 py-2.5 px-4 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? "Deleting..." : "Delete"}
+                </button>
               </div>
             </div>
           </div>

@@ -1,22 +1,121 @@
-import React, { useState } from "react";
-import { Search, Bell, ChevronDown, Menu, Upload , Users} from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Search, Bell, ChevronDown, Menu, Upload, Users } from "lucide-react";
 import Header from "../components/Header";
+import { useAuth } from "../contexts/AuthContext";
+import Toast from "../components/Toast";
 
 const SettingsPage = () => {
+  const { user, updateUserProfile } = useAuth();
   const [profileData, setProfileData] = useState({
-    firstName: "Olivia",
-    lastName: "Rhye",
-    email: "olivia@untitledul.com",
+    firstName: "",
+    lastName: "",
+    email: "",
     phone: "",
+    profilePicture: null,
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [toast, setToast] = useState({
+    visible: false,
+    message: "",
+    type: "success",
   });
 
+  // Load user data when component mounts or user changes
+  useEffect(() => {
+    console.log("SettingsPage: User data from AuthContext:", user);
+    if (user) {
+      setProfileData({
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        profilePicture: user.profilePicture || null,
+      });
+      setIsLoading(false);
+    } else {
+      // Still loading user data
+      setIsLoading(true);
+    }
+  }, [user]);
+
+  const showToast = (message, type = "success") => {
+    setToast({ visible: true, message, type });
+    window.clearTimeout(showToast._t);
+    showToast._t = window.setTimeout(() => {
+      setToast((t) => ({ ...t, visible: false }));
+    }, 3000);
+  };
+
+  const handleSaveChanges = async () => {
+    try {
+      // Show loading state
+      const saveButton = document.querySelector("[data-save-button]");
+      if (saveButton) {
+        saveButton.disabled = true;
+        saveButton.textContent = "Saving...";
+      }
+
+      // Validate required fields
+      if (!profileData.firstName.trim() || !profileData.lastName.trim()) {
+        showToast("First name and last name are required", "error");
+        return;
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(profileData.email)) {
+        showToast("Please enter a valid email address", "error");
+        return;
+      }
+
+      const result = await updateUserProfile(profileData);
+      if (result.success) {
+        showToast("Profile updated successfully!", "success");
+      } else {
+        showToast("Failed to update profile: " + result.error, "error");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      showToast("An error occurred while updating your profile.", "error");
+    } finally {
+      // Reset button state
+      const saveButton = document.querySelector("[data-save-button]");
+      if (saveButton) {
+        saveButton.disabled = false;
+        saveButton.textContent = "Save changes";
+      }
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-100">
+        <Header title="Profile" icon={Users} />
+        <div className="p-4 sm:p-6 lg:p-6">
+          <div className="bg-white rounded-xl shadow-sm p-8 text-center">
+            <div className="animate-pulse">
+              <div className="w-20 h-20 bg-gray-300 rounded-full mx-auto mb-4"></div>
+              <div className="h-4 bg-gray-300 rounded w-1/2 mx-auto mb-2"></div>
+              <div className="h-3 bg-gray-300 rounded w-1/3 mx-auto"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 overflow-y-auto">
       {/* Header */}
       <Header title="Profile" icon={Users} />
+      <Toast
+        visible={toast.visible}
+        message={toast.message}
+        type={toast.type}
+      />
 
       {/* Profile Content */}
-      <div className="p-4 sm:p-6 lg:p-6">
+      <div className="p-4 sm:p-6 lg:p-6 pb-20">
         <div>
           <div className="bg-white rounded-xl shadow-sm overflow-hidden">
             {/* Profile Header with Gradient Background */}
@@ -32,17 +131,34 @@ const SettingsPage = () => {
               <div className="flex items-end space-x-3 sm:space-x-4 pb-4 sm:pb-6">
                 <div className="relative">
                   <img
-                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop"
+                    src={
+                      user?.profilePicture ||
+                      profileData.profilePicture ||
+                      `https://i.pravatar.cc/150?u=${user?.email || "default"}`
+                    }
                     alt="Profile"
-                    className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full border-4 border-white shadow-md"
+                    className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full border-4 border-white shadow-md object-cover"
                   />
+                  <button
+                    onClick={() =>
+                      document.getElementById("profile-picture-input").click()
+                    }
+                    className="absolute bottom-0 right-0 bg-yellow-500 hover:bg-yellow-600 rounded-full p-1.5 shadow-lg transition-colors"
+                  >
+                    <Upload className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                  </button>
                 </div>
                 <div className="flex-1">
                   <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900 mt-8 sm:mt-10 lg:mt-12">
-                    {profileData.firstName} {profileData.lastName}
+                    {user?.displayName ||
+                      `${user?.firstName || ""} ${
+                        user?.lastName || ""
+                      }`.trim() ||
+                      user?.email?.split("@")[0] ||
+                      "User"}
                   </h2>
                   <p className="text-xs sm:text-sm text-gray-600">
-                    {profileData.email}
+                    {user?.email || profileData.email}
                   </p>
                 </div>
                 <div className="flex items-center">
@@ -139,7 +255,47 @@ const SettingsPage = () => {
                   <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-1.5">
                     Profile Photo
                   </label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 text-center hover:border-gray-400 transition-colors cursor-pointer">
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 text-center hover:border-gray-400 transition-colors cursor-pointer relative">
+                    <input
+                      id="profile-picture-input"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                          // Validate file size (max 5MB)
+                          if (file.size > 5 * 1024 * 1024) {
+                            showToast(
+                              "File size must be less than 5MB",
+                              "error"
+                            );
+                            return;
+                          }
+
+                          // Validate file type
+                          if (!file.type.startsWith("image/")) {
+                            showToast(
+                              "Please select a valid image file",
+                              "error"
+                            );
+                            return;
+                          }
+
+                          const reader = new FileReader();
+                          reader.onload = (event) => {
+                            setProfileData({
+                              ...profileData,
+                              profilePicture: event.target.result,
+                            });
+                          };
+                          reader.onerror = () => {
+                            showToast("Error reading file", "error");
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                      className="absolute inset-0 opacity-0 cursor-pointer"
+                    />
                     <Upload className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400 mx-auto mb-2 sm:mb-3" />
                     <p className="text-xs sm:text-sm text-gray-600">
                       <span className="text-yellow-600 font-medium hover:text-yellow-700">
@@ -148,7 +304,7 @@ const SettingsPage = () => {
                       or drag and drop
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
-                      SVG, PNG, JPG or GIF (max. 800x400px)
+                      SVG, PNG, JPG or GIF (max. 5MB)
                     </p>
                   </div>
                 </div>
@@ -162,7 +318,9 @@ const SettingsPage = () => {
                   </button>
                   <button
                     type="button"
-                    className="px-3 sm:px-4 py-2 bg-yellow-500 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-yellow-600 transition-colors"
+                    onClick={handleSaveChanges}
+                    data-save-button
+                    className="px-3 sm:px-4 py-2 bg-yellow-500 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-yellow-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Save changes
                   </button>
