@@ -38,37 +38,104 @@ const UserManagement = () => {
   const [formErrors, setFormErrors] = useState({});
   const [users, setUsers] = useState([]);
 
-  // Country-State data
-  const countryStateData = {
+  // Country-State-City data
+  const locationData = {
     IN: {
       name: "India",
-      states: [
-        "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
-        "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
-        "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram",
-        "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu",
-        "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
-      ]
+      states: {
+        "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Kurnool"],
+        "Arunachal Pradesh": ["Itanagar", "Naharlagun", "Pasighat", "Tezpur", "Bomdila"],
+        "Assam": ["Guwahati", "Silchar", "Dibrugarh", "Jorhat", "Nagaon"],
+        "Bihar": ["Patna", "Gaya", "Bhagalpur", "Muzaffarpur", "Purnia"],
+        "Chhattisgarh": ["Raipur", "Bhilai", "Korba", "Bilaspur", "Durg"],
+        "Goa": ["Panaji", "Margao", "Vasco da Gama", "Mapusa", "Ponda"],
+        "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar"],
+        "Haryana": ["Gurugram", "Faridabad", "Panipat", "Ambala", "Yamunanagar"],
+        "Himachal Pradesh": ["Shimla", "Dharamshala", "Solan", "Mandi", "Kullu"],
+        "Jharkhand": ["Ranchi", "Jamshedpur", "Dhanbad", "Bokaro", "Deoghar"],
+        "Karnataka": ["Bangalore", "Mysore", "Hubli", "Mangalore", "Belgaum"],
+        "Kerala": ["Thiruvananthapuram", "Kochi", "Kozhikode", "Thrissur", "Kollam"],
+        "Madhya Pradesh": ["Bhopal", "Indore", "Gwalior", "Jabalpur", "Ujjain"],
+        "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Nashik", "Aurangabad"],
+        "Manipur": ["Imphal", "Thoubal", "Bishnupur", "Churachandpur", "Kakching"],
+        "Meghalaya": ["Shillong", "Tura", "Jowai", "Nongpoh", "Baghmara"],
+        "Mizoram": ["Aizawl", "Lunglei", "Saiha", "Champhai", "Kolasib"],
+        "Nagaland": ["Kohima", "Dimapur", "Mokokchung", "Tuensang", "Wokha"],
+        "Odisha": ["Bhubaneswar", "Cuttack", "Rourkela", "Berhampur", "Sambalpur"],
+        "Punjab": ["Chandigarh", "Ludhiana", "Amritsar", "Jalandhar", "Patiala"],
+        "Rajasthan": ["Jaipur", "Jodhpur", "Kota", "Bikaner", "Udaipur"],
+        "Sikkim": ["Gangtok", "Namchi", "Gyalshing", "Mangan", "Rangpo"],
+        "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem"],
+        "Telangana": ["Hyderabad", "Warangal", "Nizamabad", "Khammam", "Karimnagar"],
+        "Tripura": ["Agartala", "Dharmanagar", "Udaipur", "Kailasahar", "Belonia"],
+        "Uttar Pradesh": ["Lucknow", "Kanpur", "Ghaziabad", "Agra", "Varanasi"],
+        "Uttarakhand": ["Dehradun", "Haridwar", "Roorkee", "Haldwani", "Rudrapur"],
+        "West Bengal": ["Kolkata", "Howrah", "Durgapur", "Asansol", "Siliguri"]
+      }
     },
     US: {
       name: "United States",
-      states: [
-        "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado",
-        "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho",
-        "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana",
-        "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota",
-        "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada",
-        "New Hampshire", "New Jersey", "New Mexico", "New York",
-        "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon",
-        "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota",
-        "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington",
-        "West Virginia", "Wisconsin", "Wyoming"
-      ]
+      states: {
+        "Alabama": ["Birmingham", "Montgomery", "Mobile", "Huntsville", "Tuscaloosa"],
+        "Alaska": ["Anchorage", "Fairbanks", "Juneau", "Sitka", "Ketchikan"],
+        "Arizona": ["Phoenix", "Tucson", "Mesa", "Chandler", "Scottsdale"],
+        "Arkansas": ["Little Rock", "Fort Smith", "Fayetteville", "Springdale", "Jonesboro"],
+        "California": ["Los Angeles", "San Francisco", "San Diego", "Sacramento", "San Jose"],
+        "Colorado": ["Denver", "Colorado Springs", "Aurora", "Fort Collins", "Lakewood"],
+        "Connecticut": ["Bridgeport", "New Haven", "Hartford", "Stamford", "Waterbury"],
+        "Delaware": ["Wilmington", "Dover", "Newark", "Middletown", "Smyrna"],
+        "Florida": ["Miami", "Orlando", "Tampa", "Jacksonville", "Fort Lauderdale"],
+        "Georgia": ["Atlanta", "Augusta", "Columbus", "Savannah", "Athens"],
+        "Hawaii": ["Honolulu", "Pearl City", "Hilo", "Kailua", "Waipahu"],
+        "Idaho": ["Boise", "Meridian", "Nampa", "Idaho Falls", "Pocatello"],
+        "Illinois": ["Chicago", "Aurora", "Rockford", "Joliet", "Naperville"],
+        "Indiana": ["Indianapolis", "Fort Wayne", "Evansville", "South Bend", "Carmel"],
+        "Iowa": ["Des Moines", "Cedar Rapids", "Davenport", "Sioux City", "Waterloo"],
+        "Kansas": ["Wichita", "Overland Park", "Kansas City", "Topeka", "Olathe"],
+        "Kentucky": ["Louisville", "Lexington", "Bowling Green", "Owensboro", "Covington"],
+        "Louisiana": ["New Orleans", "Baton Rouge", "Shreveport", "Lafayette", "Lake Charles"],
+        "Maine": ["Portland", "Lewiston", "Bangor", "South Portland", "Auburn"],
+        "Maryland": ["Baltimore", "Frederick", "Rockville", "Gaithersburg", "Bowie"],
+        "Massachusetts": ["Boston", "Worcester", "Springfield", "Lowell", "Cambridge"],
+        "Michigan": ["Detroit", "Grand Rapids", "Warren", "Sterling Heights", "Lansing"],
+        "Minnesota": ["Minneapolis", "Saint Paul", "Rochester", "Duluth", "Bloomington"],
+        "Mississippi": ["Jackson", "Gulfport", "Southaven", "Hattiesburg", "Biloxi"],
+        "Missouri": ["Kansas City", "Saint Louis", "Springfield", "Independence", "Columbia"],
+        "Montana": ["Billings", "Missoula", "Great Falls", "Bozeman", "Butte"],
+        "Nebraska": ["Omaha", "Lincoln", "Bellevue", "Grand Island", "Kearney"],
+        "Nevada": ["Las Vegas", "Henderson", "Reno", "North Las Vegas", "Sparks"],
+        "New Hampshire": ["Manchester", "Nashua", "Concord", "Derry", "Rochester"],
+        "New Jersey": ["Newark", "Jersey City", "Paterson", "Elizabeth", "Edison"],
+        "New Mexico": ["Albuquerque", "Las Cruces", "Rio Rancho", "Santa Fe", "Roswell"],
+        "New York": ["New York City", "Buffalo", "Rochester", "Yonkers", "Syracuse"],
+        "North Carolina": ["Charlotte", "Raleigh", "Greensboro", "Durham", "Winston-Salem"],
+        "North Dakota": ["Fargo", "Bismarck", "Grand Forks", "Minot", "West Fargo"],
+        "Ohio": ["Columbus", "Cleveland", "Cincinnati", "Toledo", "Akron"],
+        "Oklahoma": ["Oklahoma City", "Tulsa", "Norman", "Broken Arrow", "Lawton"],
+        "Oregon": ["Portland", "Eugene", "Salem", "Gresham", "Hillsboro"],
+        "Pennsylvania": ["Philadelphia", "Pittsburgh", "Allentown", "Erie", "Reading"],
+        "Rhode Island": ["Providence", "Warwick", "Cranston", "Pawtucket", "East Providence"],
+        "South Carolina": ["Charleston", "Columbia", "North Charleston", "Mount Pleasant", "Rock Hill"],
+        "South Dakota": ["Sioux Falls", "Rapid City", "Aberdeen", "Brookings", "Watertown"],
+        "Tennessee": ["Nashville", "Memphis", "Knoxville", "Chattanooga", "Clarksville"],
+        "Texas": ["Houston", "Dallas", "Austin", "San Antonio", "Fort Worth"],
+        "Utah": ["Salt Lake City", "West Valley City", "Provo", "West Jordan", "Orem"],
+        "Vermont": ["Burlington", "Essex", "South Burlington", "Colchester", "Rutland"],
+        "Virginia": ["Virginia Beach", "Norfolk", "Chesapeake", "Richmond", "Newport News"],
+        "Washington": ["Seattle", "Spokane", "Tacoma", "Vancouver", "Bellevue"],
+        "West Virginia": ["Charleston", "Huntington", "Parkersburg", "Morgantown", "Wheeling"],
+        "Wisconsin": ["Milwaukee", "Madison", "Green Bay", "Kenosha", "Racine"],
+        "Wyoming": ["Cheyenne", "Casper", "Laramie", "Gillette", "Rock Springs"]
+      }
     }
   };
 
   const getStatesForCountry = (countryCode) => {
-    return countryStateData[countryCode]?.states || [];
+    return Object.keys(locationData[countryCode]?.states || {});
+  };
+
+  const getCitiesForState = (countryCode, stateName) => {
+    return locationData[countryCode]?.states[stateName] || [];
   };
 
   // Local toaster
@@ -191,12 +258,19 @@ const UserManagement = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     
-    // If country changes, reset state
+    // If country changes, reset state and city
     if (name === 'country') {
       setFormData((prev) => ({
         ...prev,
         [name]: value,
-        state: "", // Reset state when country changes
+        state: "",
+        city: ""
+      }));
+    } else if (name === 'state') {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+        city: "" // Reset city when state changes
       }));
     } else {
       setFormData((prev) => ({
@@ -1094,13 +1168,17 @@ const UserManagement = () => {
                           name="city"
                           value={formData.city}
                           onChange={handleInputChange}
-                          className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-700 text-sm"
+                          disabled={!formData.state}
+                          className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-700 text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
                         >
-                          <option value="">Select city</option>
-                          <option value="Los Angeles">Los Angeles</option>
-                          <option value="New York">New York</option>
-                          <option value="Chicago">Chicago</option>
-                          <option value="Houston">Houston</option>
+                          <option value="">
+                            {formData.state ? "Select city" : "Select state first"}
+                          </option>
+                          {getCitiesForState(formData.country, formData.state).map((city) => (
+                            <option key={city} value={city}>
+                              {city}
+                            </option>
+                          ))}
                         </select>
                         <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                       </div>
@@ -1377,13 +1455,17 @@ const UserManagement = () => {
                           name="city"
                           value={formData.city}
                           onChange={handleInputChange}
-                          className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-700 text-sm"
+                          disabled={!formData.state}
+                          className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-700 text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
                         >
-                          <option value="">Select city</option>
-                          <option value="Los Angeles">Los Angeles</option>
-                          <option value="New York">New York</option>
-                          <option value="Chicago">Chicago</option>
-                          <option value="Houston">Houston</option>
+                          <option value="">
+                            {formData.state ? "Select city" : "Select state first"}
+                          </option>
+                          {getCitiesForState(formData.country, formData.state).map((city) => (
+                            <option key={city} value={city}>
+                              {city}
+                            </option>
+                          ))}
                         </select>
                         <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                       </div>
