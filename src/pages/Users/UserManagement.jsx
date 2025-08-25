@@ -38,104 +38,68 @@ const UserManagement = () => {
   const [formErrors, setFormErrors] = useState({});
   const [users, setUsers] = useState([]);
 
-  // Country-State-City data
-  const locationData = {
-    IN: {
-      name: "India",
-      states: {
-        "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Kurnool"],
-        "Arunachal Pradesh": ["Itanagar", "Naharlagun", "Pasighat", "Tezpur", "Bomdila"],
-        "Assam": ["Guwahati", "Silchar", "Dibrugarh", "Jorhat", "Nagaon"],
-        "Bihar": ["Patna", "Gaya", "Bhagalpur", "Muzaffarpur", "Purnia"],
-        "Chhattisgarh": ["Raipur", "Bhilai", "Korba", "Bilaspur", "Durg"],
-        "Goa": ["Panaji", "Margao", "Vasco da Gama", "Mapusa", "Ponda"],
-        "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar"],
-        "Haryana": ["Gurugram", "Faridabad", "Panipat", "Ambala", "Yamunanagar"],
-        "Himachal Pradesh": ["Shimla", "Dharamshala", "Solan", "Mandi", "Kullu"],
-        "Jharkhand": ["Ranchi", "Jamshedpur", "Dhanbad", "Bokaro", "Deoghar"],
-        "Karnataka": ["Bangalore", "Mysore", "Hubli", "Mangalore", "Belgaum"],
-        "Kerala": ["Thiruvananthapuram", "Kochi", "Kozhikode", "Thrissur", "Kollam"],
-        "Madhya Pradesh": ["Bhopal", "Indore", "Gwalior", "Jabalpur", "Ujjain"],
-        "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Nashik", "Aurangabad"],
-        "Manipur": ["Imphal", "Thoubal", "Bishnupur", "Churachandpur", "Kakching"],
-        "Meghalaya": ["Shillong", "Tura", "Jowai", "Nongpoh", "Baghmara"],
-        "Mizoram": ["Aizawl", "Lunglei", "Saiha", "Champhai", "Kolasib"],
-        "Nagaland": ["Kohima", "Dimapur", "Mokokchung", "Tuensang", "Wokha"],
-        "Odisha": ["Bhubaneswar", "Cuttack", "Rourkela", "Berhampur", "Sambalpur"],
-        "Punjab": ["Chandigarh", "Ludhiana", "Amritsar", "Jalandhar", "Patiala"],
-        "Rajasthan": ["Jaipur", "Jodhpur", "Kota", "Bikaner", "Udaipur"],
-        "Sikkim": ["Gangtok", "Namchi", "Gyalshing", "Mangan", "Rangpo"],
-        "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem"],
-        "Telangana": ["Hyderabad", "Warangal", "Nizamabad", "Khammam", "Karimnagar"],
-        "Tripura": ["Agartala", "Dharmanagar", "Udaipur", "Kailasahar", "Belonia"],
-        "Uttar Pradesh": ["Lucknow", "Kanpur", "Ghaziabad", "Agra", "Varanasi"],
-        "Uttarakhand": ["Dehradun", "Haridwar", "Roorkee", "Haldwani", "Rudrapur"],
-        "West Bengal": ["Kolkata", "Howrah", "Durgapur", "Asansol", "Siliguri"]
+  // Location data state
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [loadingStates, setLoadingStates] = useState(false);
+  const [loadingCities, setLoadingCities] = useState(false);
+
+  // Fetch countries on component mount
+  useEffect(() => {
+    fetchCountries();
+  }, []);
+
+  const fetchCountries = async () => {
+    try {
+      const response = await fetch('https://countriesnow.space/api/v0.1/countries');
+      const data = await response.json();
+      if (data.error === false) {
+        setCountries(data.data);
       }
-    },
-    US: {
-      name: "United States",
-      states: {
-        "Alabama": ["Birmingham", "Montgomery", "Mobile", "Huntsville", "Tuscaloosa"],
-        "Alaska": ["Anchorage", "Fairbanks", "Juneau", "Sitka", "Ketchikan"],
-        "Arizona": ["Phoenix", "Tucson", "Mesa", "Chandler", "Scottsdale"],
-        "Arkansas": ["Little Rock", "Fort Smith", "Fayetteville", "Springdale", "Jonesboro"],
-        "California": ["Los Angeles", "San Francisco", "San Diego", "Sacramento", "San Jose"],
-        "Colorado": ["Denver", "Colorado Springs", "Aurora", "Fort Collins", "Lakewood"],
-        "Connecticut": ["Bridgeport", "New Haven", "Hartford", "Stamford", "Waterbury"],
-        "Delaware": ["Wilmington", "Dover", "Newark", "Middletown", "Smyrna"],
-        "Florida": ["Miami", "Orlando", "Tampa", "Jacksonville", "Fort Lauderdale"],
-        "Georgia": ["Atlanta", "Augusta", "Columbus", "Savannah", "Athens"],
-        "Hawaii": ["Honolulu", "Pearl City", "Hilo", "Kailua", "Waipahu"],
-        "Idaho": ["Boise", "Meridian", "Nampa", "Idaho Falls", "Pocatello"],
-        "Illinois": ["Chicago", "Aurora", "Rockford", "Joliet", "Naperville"],
-        "Indiana": ["Indianapolis", "Fort Wayne", "Evansville", "South Bend", "Carmel"],
-        "Iowa": ["Des Moines", "Cedar Rapids", "Davenport", "Sioux City", "Waterloo"],
-        "Kansas": ["Wichita", "Overland Park", "Kansas City", "Topeka", "Olathe"],
-        "Kentucky": ["Louisville", "Lexington", "Bowling Green", "Owensboro", "Covington"],
-        "Louisiana": ["New Orleans", "Baton Rouge", "Shreveport", "Lafayette", "Lake Charles"],
-        "Maine": ["Portland", "Lewiston", "Bangor", "South Portland", "Auburn"],
-        "Maryland": ["Baltimore", "Frederick", "Rockville", "Gaithersburg", "Bowie"],
-        "Massachusetts": ["Boston", "Worcester", "Springfield", "Lowell", "Cambridge"],
-        "Michigan": ["Detroit", "Grand Rapids", "Warren", "Sterling Heights", "Lansing"],
-        "Minnesota": ["Minneapolis", "Saint Paul", "Rochester", "Duluth", "Bloomington"],
-        "Mississippi": ["Jackson", "Gulfport", "Southaven", "Hattiesburg", "Biloxi"],
-        "Missouri": ["Kansas City", "Saint Louis", "Springfield", "Independence", "Columbia"],
-        "Montana": ["Billings", "Missoula", "Great Falls", "Bozeman", "Butte"],
-        "Nebraska": ["Omaha", "Lincoln", "Bellevue", "Grand Island", "Kearney"],
-        "Nevada": ["Las Vegas", "Henderson", "Reno", "North Las Vegas", "Sparks"],
-        "New Hampshire": ["Manchester", "Nashua", "Concord", "Derry", "Rochester"],
-        "New Jersey": ["Newark", "Jersey City", "Paterson", "Elizabeth", "Edison"],
-        "New Mexico": ["Albuquerque", "Las Cruces", "Rio Rancho", "Santa Fe", "Roswell"],
-        "New York": ["New York City", "Buffalo", "Rochester", "Yonkers", "Syracuse"],
-        "North Carolina": ["Charlotte", "Raleigh", "Greensboro", "Durham", "Winston-Salem"],
-        "North Dakota": ["Fargo", "Bismarck", "Grand Forks", "Minot", "West Fargo"],
-        "Ohio": ["Columbus", "Cleveland", "Cincinnati", "Toledo", "Akron"],
-        "Oklahoma": ["Oklahoma City", "Tulsa", "Norman", "Broken Arrow", "Lawton"],
-        "Oregon": ["Portland", "Eugene", "Salem", "Gresham", "Hillsboro"],
-        "Pennsylvania": ["Philadelphia", "Pittsburgh", "Allentown", "Erie", "Reading"],
-        "Rhode Island": ["Providence", "Warwick", "Cranston", "Pawtucket", "East Providence"],
-        "South Carolina": ["Charleston", "Columbia", "North Charleston", "Mount Pleasant", "Rock Hill"],
-        "South Dakota": ["Sioux Falls", "Rapid City", "Aberdeen", "Brookings", "Watertown"],
-        "Tennessee": ["Nashville", "Memphis", "Knoxville", "Chattanooga", "Clarksville"],
-        "Texas": ["Houston", "Dallas", "Austin", "San Antonio", "Fort Worth"],
-        "Utah": ["Salt Lake City", "West Valley City", "Provo", "West Jordan", "Orem"],
-        "Vermont": ["Burlington", "Essex", "South Burlington", "Colchester", "Rutland"],
-        "Virginia": ["Virginia Beach", "Norfolk", "Chesapeake", "Richmond", "Newport News"],
-        "Washington": ["Seattle", "Spokane", "Tacoma", "Vancouver", "Bellevue"],
-        "West Virginia": ["Charleston", "Huntington", "Parkersburg", "Morgantown", "Wheeling"],
-        "Wisconsin": ["Milwaukee", "Madison", "Green Bay", "Kenosha", "Racine"],
-        "Wyoming": ["Cheyenne", "Casper", "Laramie", "Gillette", "Rock Springs"]
-      }
+    } catch (error) {
+      console.error('Error fetching countries:', error);
     }
   };
 
-  const getStatesForCountry = (countryCode) => {
-    return Object.keys(locationData[countryCode]?.states || {});
+  const fetchStates = async (countryName) => {
+    try {
+      setLoadingStates(true);
+      const response = await fetch('https://countriesnow.space/api/v0.1/countries/states', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ country: countryName })
+      });
+      const data = await response.json();
+      if (data.error === false) {
+        setStates(data.data.states);
+      }
+    } catch (error) {
+      console.error('Error fetching states:', error);
+      setStates([]);
+    } finally {
+      setLoadingStates(false);
+    }
   };
 
-  const getCitiesForState = (countryCode, stateName) => {
-    return locationData[countryCode]?.states[stateName] || [];
+  const fetchCities = async (countryName, stateName) => {
+    try {
+      setLoadingCities(true);
+      const response = await fetch('https://countriesnow.space/api/v0.1/countries/state/cities', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ country: countryName, state: stateName })
+      });
+      const data = await response.json();
+      if (data.error === false) {
+        setCities(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching cities:', error);
+      setCities([]);
+    } finally {
+      setLoadingCities(false);
+    }
   };
 
   // Local toaster
@@ -223,6 +187,8 @@ const UserManagement = () => {
       businessCategory: "",
     });
     setFormErrors({});
+    setStates([]);
+    setCities([]);
   };
 
   const validateForm = () => {
@@ -266,12 +232,21 @@ const UserManagement = () => {
         state: "",
         city: ""
       }));
+      setStates([]);
+      setCities([]);
+      if (value) {
+        fetchStates(value);
+      }
     } else if (name === 'state') {
       setFormData((prev) => ({
         ...prev,
         [name]: value,
         city: "" // Reset city when state changes
       }));
+      setCities([]);
+      if (value && formData.country) {
+        fetchCities(formData.country, value);
+      }
     } else {
       setFormData((prev) => ({
         ...prev,
@@ -336,6 +311,15 @@ const UserManagement = () => {
       city: user.city || "",
       businessCategory: user.businessCategory || "",
     });
+    
+    // Fetch states and cities if country/state are pre-filled
+    if (user.country) {
+      fetchStates(user.country);
+      if (user.state) {
+        fetchCities(user.country, user.state);
+      }
+    }
+    
     setShowEditUserModal(true);
   };
 
@@ -1128,8 +1112,11 @@ const UserManagement = () => {
                             className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-700 text-sm"
                           >
                             <option value="">Select country</option>
-                            <option value="IN">India</option>
-                            <option value="US">United States</option>
+                            {countries.map((country) => (
+                              <option key={country.country} value={country.country}>
+                                {country.country}
+                              </option>
+                            ))}
                           </select>
                           <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                         </div>
@@ -1147,11 +1134,11 @@ const UserManagement = () => {
                             className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-700 text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
                           >
                             <option value="">
-                              {formData.country ? "Select state" : "Select country first"}
+                              {loadingStates ? "Loading states..." : formData.country ? "Select state" : "Select country first"}
                             </option>
-                            {getStatesForCountry(formData.country).map((state) => (
-                              <option key={state} value={state}>
-                                {state}
+                            {states.map((state) => (
+                              <option key={state.name} value={state.name}>
+                                {state.name}
                               </option>
                             ))}
                           </select>
@@ -1172,9 +1159,9 @@ const UserManagement = () => {
                           className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-700 text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
                         >
                           <option value="">
-                            {formData.state ? "Select city" : "Select state first"}
+                            {loadingCities ? "Loading cities..." : formData.state ? "Select city" : "Select state first"}
                           </option>
-                          {getCitiesForState(formData.country, formData.state).map((city) => (
+                          {cities.map((city) => (
                             <option key={city} value={city}>
                               {city}
                             </option>
@@ -1415,8 +1402,11 @@ const UserManagement = () => {
                             className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-700 text-sm"
                           >
                             <option value="">Select country</option>
-                            <option value="IN">India</option>
-                            <option value="US">United States</option>
+                            {countries.map((country) => (
+                              <option key={country.country} value={country.country}>
+                                {country.country}
+                              </option>
+                            ))}
                           </select>
                           <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                         </div>
@@ -1434,11 +1424,11 @@ const UserManagement = () => {
                             className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-700 text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
                           >
                             <option value="">
-                              {formData.country ? "Select state" : "Select country first"}
+                              {loadingStates ? "Loading states..." : formData.country ? "Select state" : "Select country first"}
                             </option>
-                            {getStatesForCountry(formData.country).map((state) => (
-                              <option key={state} value={state}>
-                                {state}
+                            {states.map((state) => (
+                              <option key={state.name} value={state.name}>
+                                {state.name}
                               </option>
                             ))}
                           </select>
@@ -1459,9 +1449,9 @@ const UserManagement = () => {
                           className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-700 text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
                         >
                           <option value="">
-                            {formData.state ? "Select city" : "Select state first"}
+                            {loadingCities ? "Loading cities..." : formData.state ? "Select city" : "Select state first"}
                           </option>
-                          {getCitiesForState(formData.country, formData.state).map((city) => (
+                          {cities.map((city) => (
                             <option key={city} value={city}>
                               {city}
                             </option>
