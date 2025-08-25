@@ -38,6 +38,39 @@ const UserManagement = () => {
   const [formErrors, setFormErrors] = useState({});
   const [users, setUsers] = useState([]);
 
+  // Country-State data
+  const countryStateData = {
+    IN: {
+      name: "India",
+      states: [
+        "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
+        "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
+        "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram",
+        "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu",
+        "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
+      ]
+    },
+    US: {
+      name: "United States",
+      states: [
+        "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado",
+        "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho",
+        "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana",
+        "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota",
+        "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada",
+        "New Hampshire", "New Jersey", "New Mexico", "New York",
+        "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon",
+        "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota",
+        "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington",
+        "West Virginia", "Wisconsin", "Wyoming"
+      ]
+    }
+  };
+
+  const getStatesForCountry = (countryCode) => {
+    return countryStateData[countryCode]?.states || [];
+  };
+
   // Local toaster
   const [toast, setToast] = useState({
     visible: false,
@@ -157,10 +190,20 @@ const UserManagement = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    
+    // If country changes, reset state
+    if (name === 'country') {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+        state: "", // Reset state when country changes
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
 
     // Clear error when user starts typing
     if (formErrors[name]) {
@@ -1011,11 +1054,8 @@ const UserManagement = () => {
                             className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-700 text-sm"
                           >
                             <option value="">Select country</option>
-                            <option value="US">United States</option>
-                            <option value="CA">Canada</option>
-                            <option value="UK">United Kingdom</option>
-                            <option value="AU">Australia</option>
                             <option value="IN">India</option>
+                            <option value="US">United States</option>
                           </select>
                           <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                         </div>
@@ -1029,13 +1069,17 @@ const UserManagement = () => {
                             name="state"
                             value={formData.state}
                             onChange={handleInputChange}
-                            className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-700 text-sm"
+                            disabled={!formData.country}
+                            className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-700 text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
                           >
-                            <option value="">Select state</option>
-                            <option value="CA">California</option>
-                            <option value="NY">New York</option>
-                            <option value="TX">Texas</option>
-                            <option value="FL">Florida</option>
+                            <option value="">
+                              {formData.country ? "Select state" : "Select country first"}
+                            </option>
+                            {getStatesForCountry(formData.country).map((state) => (
+                              <option key={state} value={state}>
+                                {state}
+                              </option>
+                            ))}
                           </select>
                           <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                         </div>
@@ -1201,7 +1245,7 @@ const UserManagement = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="Enter email address"
-                    className={`w-full px-ебя3.5 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm ${
+                    className={`w-full px-3.5 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm ${
                       formErrors.email
                         ? "border-red-300 bg-red-50"
                         : "border-gray-300"
@@ -1293,11 +1337,8 @@ const UserManagement = () => {
                             className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-700 text-sm"
                           >
                             <option value="">Select country</option>
-                            <option value="US">United States</option>
-                            <option value="CA">Canada</option>
-                            <option value="UK">United Kingdom</option>
-                            <option value="AU">Australia</option>
                             <option value="IN">India</option>
+                            <option value="US">United States</option>
                           </select>
                           <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                         </div>
@@ -1311,13 +1352,17 @@ const UserManagement = () => {
                             name="state"
                             value={formData.state}
                             onChange={handleInputChange}
-                            className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-700 text-sm"
+                            disabled={!formData.country}
+                            className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-700 text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
                           >
-                            <option value="">Select state</option>
-                            <option value="CA">California</option>
-                            <option value="NY">New York</option>
-                            <option value="TX">Texas</option>
-                            <option value="FL">Florida</option>
+                            <option value="">
+                              {formData.country ? "Select state" : "Select country first"}
+                            </option>
+                            {getStatesForCountry(formData.country).map((state) => (
+                              <option key={state} value={state}>
+                                {state}
+                              </option>
+                            ))}
                           </select>
                           <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                         </div>
@@ -1340,11 +1385,7 @@ const UserManagement = () => {
                           <option value="Chicago">Chicago</option>
                           <option value="Houston">Houston</option>
                         </select>
-                        <ChevronDown
-                          className="absolute
-
- right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
-                        />
+                        <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                       </div>
                     </div>
                   </div>
