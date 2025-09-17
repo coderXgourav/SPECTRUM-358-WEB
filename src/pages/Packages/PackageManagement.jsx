@@ -25,8 +25,7 @@ const PackageManagement = () => {
   const [packages, setPackages] = useState([]);
   const [stats, setStats] = useState({
     activePackages: 0,
-    expiredPackages: 0,
-    expiringSoon: 0,
+    totalPackages: 0,
     totalRevenue: "$0",
   });
   const [loading, setLoading] = useState(true);
@@ -36,10 +35,8 @@ const PackageManagement = () => {
     description: "",
     price: "",
     duration: "1 year",
-    features: [],
-    category: "standard",
-    startDate: "",
-    endDate: "",
+    packageLimit: "",
+    trialDays: "",
   });
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingPackage, setEditingPackage] = useState(null);
@@ -84,13 +81,17 @@ const PackageManagement = () => {
   const fetchPackages = async () => {
     try {
       setLoading(true);
+      console.log('Fetching packages...');
       const response = await packageService.getPackages();
+      console.log('Package response:', response);
+      
       setPackages(response.packages || []);
       if (response.stats) {
         setStats(response.stats);
       }
       setError(null);
     } catch (err) {
+      console.error('Error fetching packages:', err);
       showToast(
         "Failed to load packages. Please check your connection and try again.",
         "error"
@@ -137,6 +138,8 @@ const PackageManagement = () => {
       const packageData = {
         ...createPackageData,
         price: price,
+        packageLimit: createPackageData.packageLimit || null,
+        trialDays: createPackageData.trialDays || 0,
       };
 
       await packageService.createPackage(packageData);
@@ -146,10 +149,8 @@ const PackageManagement = () => {
         description: "",
         price: "",
         duration: "1 year",
-        features: [],
-        category: "standard",
-        startDate: "",
-        endDate: "",
+        packageLimit: "",
+        trialDays: "",
       });
       setError(null);
       await fetchPackages();
@@ -239,6 +240,8 @@ const PackageManagement = () => {
       const updateData = {
         ...editingPackage,
         price: price,
+        packageLimit: editingPackage.packageLimit || null,
+        trialDays: editingPackage.trialDays || 0,
       };
 
       console.log(
@@ -305,29 +308,24 @@ const PackageManagement = () => {
         )}
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-4 sm:mb-6 lg:mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 mb-4 sm:mb-6 lg:mb-8">
           <PackageStatCard
             title="Active Packages"
             value={
-              loading ? "..." : stats.activePackages.toString().padStart(2, "0")
+              loading ? "..." : (stats.activePackages || 0).toString().padStart(2, "0")
             }
             icon={
               <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
             }
           />
           <PackageStatCard
-            title="Expired Packages"
-            value={loading ? "..." : stats.expiredPackages.toLocaleString()}
-            icon={<XCircle className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />}
-          />
-          <PackageStatCard
-            title="Expiring Soon"
-            value={loading ? "..." : stats.expiringSoon.toLocaleString()}
-            icon={<Bell className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />}
+            title="Total Packages"
+            value={loading ? "..." : (stats.totalPackages || 0).toLocaleString()}
+            icon={<Package className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />}
           />
           <PackageStatCard
             title="Total Package Revenue"
-            value={loading ? "..." : stats.totalRevenue}
+            value={loading ? "..." : (stats.totalRevenue || "$0")}
             icon={
               <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
             }
@@ -374,13 +372,16 @@ const PackageManagement = () => {
                     Price
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Validity
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
+                    Duration
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Total User
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Limit
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Trial
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Action
@@ -430,20 +431,16 @@ const PackageManagement = () => {
                         {pkg.price}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {pkg.validity || pkg.validityPeriod}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span
-                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusStyle(
-                            pkg.status
-                          )}`}
-                        >
-                          <span className="w-2 h-2 rounded-full bg-current mr-2"></span>
-                          {pkg.status}
-                        </span>
+                        {pkg.duration}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
                         {pkg.totalUser}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {pkg.packageLimit || 'Unlimited'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {pkg.trialDays ? `${pkg.trialDays} days` : 'No trial'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div className="relative dropdown-container">
@@ -499,14 +496,6 @@ const PackageManagement = () => {
                         <h4 className="text-sm font-medium text-gray-900">
                           {pkg.name}
                         </h4>
-                        <span
-                          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusStyle(
-                            pkg.status
-                          )}`}
-                        >
-                          <span className="w-1.5 h-1.5 rounded-full bg-current mr-1"></span>
-                          {pkg.status}
-                        </span>
                       </div>
                       <p className="text-xs text-gray-500 mb-1">
                         ID: {pkg.packageId || pkg.id}
@@ -548,15 +537,27 @@ const PackageManagement = () => {
 
                   <div className="grid grid-cols-2 gap-4 text-xs text-gray-600">
                     <div>
-                      <span className="font-medium">Validity:</span>
+                      <span className="font-medium">Duration:</span>
                       <p className="mt-1">
-                        {pkg.validity || pkg.validityPeriod}
+                        {pkg.duration}
                       </p>
                     </div>
                     <div>
                       <span className="font-medium">Total Users:</span>
                       <p className="mt-1 font-semibold text-gray-900">
                         {pkg.totalUser}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="font-medium">Limit:</span>
+                      <p className="mt-1 text-gray-900">
+                        {pkg.packageLimit || 'Unlimited'}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="font-medium">Trial:</span>
+                      <p className="mt-1 text-gray-900">
+                        {pkg.trialDays ? `${pkg.trialDays} days` : 'No trial'}
                       </p>
                     </div>
                   </div>
@@ -608,14 +609,6 @@ const PackageManagement = () => {
                           )}
                         </div>
                       </div>
-                      <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getStatusStyle(
-                          pkg.status
-                        )}`}
-                      >
-                        <span className="w-1.5 h-1.5 rounded-full bg-current mr-1"></span>
-                        {pkg.status}
-                      </span>
                     </div>
                   </div>
 
@@ -639,9 +632,21 @@ const PackageManagement = () => {
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="font-medium">Validity:</span>
-                      <span className="text-gray-900 text-right max-w-[60%]">
-                        {pkg.validity || pkg.validityPeriod}
+                      <span className="font-medium">Duration:</span>
+                      <span className="text-gray-900">
+                        {pkg.duration}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium">Limit:</span>
+                      <span className="text-gray-900">
+                        {pkg.packageLimit || 'Unlimited'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-medium">Trial:</span>
+                      <span className="text-gray-900">
+                        {pkg.trialDays ? `${pkg.trialDays} days` : 'No trial'}
                       </span>
                     </div>
                   </div>
@@ -748,86 +753,66 @@ const PackageManagement = () => {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Duration
-                    </label>
-                    <div className="relative">
-                      <select
-                        value={createPackageData.duration}
-                        onChange={(e) =>
-                          setCreatePackageData({
-                            ...createPackageData,
-                            duration: e.target.value,
-                          })
-                        }
-                        className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-900 text-sm"
-                      >
-                        <option value="1 month">1 Month</option>
-                        <option value="3 months">3 Months</option>
-                        <option value="6 months">6 Months</option>
-                        <option value="1 year">1 Year</option>
-                        <option value="2 years">2 Years</option>
-                      </select>
-                      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Category
-                    </label>
-                    <div className="relative">
-                      <select
-                        value={createPackageData.category}
-                        onChange={(e) =>
-                          setCreatePackageData({
-                            ...createPackageData,
-                            category: e.target.value,
-                          })
-                        }
-                        className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-900 text-sm"
-                      >
-                        <option value="standard">Standard</option>
-                        <option value="premium">Premium</option>
-                        <option value="enterprise">Enterprise</option>
-                      </select>
-                      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-                    </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    Duration
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={createPackageData.duration}
+                      onChange={(e) =>
+                        setCreatePackageData({
+                          ...createPackageData,
+                          duration: e.target.value,
+                        })
+                      }
+                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-900 text-sm"
+                    >
+                      <option value="1 month">1 Month</option>
+                      <option value="3 months">3 Months</option>
+                      <option value="6 months">6 Months</option>
+                      <option value="1 year">1 Year</option>
+                      <option value="2 years">2 Years</option>
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Start Date
+                      Package Limit
                     </label>
                     <input
-                      type="date"
-                      value={createPackageData.startDate}
+                      type="number"
+                      min="1"
+                      placeholder="Leave empty for unlimited"
+                      value={createPackageData.packageLimit}
                       onChange={(e) =>
                         setCreatePackageData({
                           ...createPackageData,
-                          startDate: e.target.value,
+                          packageLimit: e.target.value,
                         })
                       }
-                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent text-sm"
+                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      End Date
+                      Trial Days
                     </label>
                     <input
-                      type="date"
-                      value={createPackageData.endDate}
+                      type="number"
+                      min="0"
+                      placeholder="0"
+                      value={createPackageData.trialDays}
                       onChange={(e) =>
                         setCreatePackageData({
                           ...createPackageData,
-                          endDate: e.target.value,
+                          trialDays: e.target.value,
                         })
                       }
-                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent text-sm"
+                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
                     />
                   </div>
                 </div>
@@ -951,52 +936,67 @@ const PackageManagement = () => {
                   />
                 </div>
 
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    Duration
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={editingPackage.duration}
+                      onChange={(e) =>
+                        setEditingPackage({
+                          ...editingPackage,
+                          duration: e.target.value,
+                        })
+                      }
+                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-900 text-sm"
+                    >
+                      <option value="1 month">1 Month</option>
+                      <option value="3 months">3 Months</option>
+                      <option value="6 months">6 Months</option>
+                      <option value="1 year">1 Year</option>
+                      <option value="2 years">2 Years</option>
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Duration
+                      Package Limit
                     </label>
-                    <div className="relative">
-                      <select
-                        value={editingPackage.duration}
-                        onChange={(e) =>
-                          setEditingPackage({
-                            ...editingPackage,
-                            duration: e.target.value,
-                          })
-                        }
-                        className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-900 text-sm"
-                      >
-                        <option value="1 month">1 Month</option>
-                        <option value="3 months">3 Months</option>
-                        <option value="6 months">6 Months</option>
-                        <option value="1 year">1 Year</option>
-                        <option value="2 years">2 Years</option>
-                      </select>
-                      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-                    </div>
+                    <input
+                      type="number"
+                      min="1"
+                      placeholder="Leave empty for unlimited"
+                      value={editingPackage.packageLimit || ''}
+                      onChange={(e) =>
+                        setEditingPackage({
+                          ...editingPackage,
+                          packageLimit: e.target.value,
+                        })
+                      }
+                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Category
+                      Trial Days
                     </label>
-                    <div className="relative">
-                      <select
-                        value={editingPackage.category}
-                        onChange={(e) =>
-                          setEditingPackage({
-                            ...editingPackage,
-                            category: e.target.value,
-                          })
-                        }
-                        className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-900 text-sm"
-                      >
-                        <option value="standard">Standard</option>
-                        <option value="premium">Premium</option>
-                        <option value="enterprise">Enterprise</option>
-                      </select>
-                      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-                    </div>
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="0"
+                      value={editingPackage.trialDays || ''}
+                      onChange={(e) =>
+                        setEditingPackage({
+                          ...editingPackage,
+                          trialDays: e.target.value,
+                        })
+                      }
+                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
+                    />
                   </div>
                 </div>
 
