@@ -34,9 +34,8 @@ const PackageManagement = () => {
     name: "",
     description: "",
     price: "",
-    duration: "1 year",
+    duration: "1 month",
     packageLimit: "",
-    trialDays: "",
   });
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingPackage, setEditingPackage] = useState(null);
@@ -128,10 +127,10 @@ const PackageManagement = () => {
         return;
       }
 
-      // Ensure price is a valid number
+      // Ensure price is a valid number (allow 0 for demo packages)
       const price = parseFloat(createPackageData.price);
-      if (isNaN(price) || price <= 0) {
-        setError("Please enter a valid price");
+      if (isNaN(price) || price < 0) {
+        setError("Please enter a valid price (0 or greater)");
         return;
       }
 
@@ -139,7 +138,6 @@ const PackageManagement = () => {
         ...createPackageData,
         price: price,
         packageLimit: createPackageData.packageLimit || null,
-        trialDays: createPackageData.trialDays || 0,
       };
 
       await packageService.createPackage(packageData);
@@ -148,9 +146,8 @@ const PackageManagement = () => {
         name: "",
         description: "",
         price: "",
-        duration: "1 year",
+        duration: "1 month",
         packageLimit: "",
-        trialDays: "",
       });
       setError(null);
       await fetchPackages();
@@ -230,10 +227,10 @@ const PackageManagement = () => {
         return;
       }
 
-      // Ensure price is a valid number
+      // Ensure price is a valid number (allow 0 for demo packages)
       const price = parseFloat(editingPackage.price);
-      if (isNaN(price) || price <= 0) {
-        setError("Please enter a valid price");
+      if (isNaN(price) || price < 0) {
+        setError("Please enter a valid price (0 or greater)");
         return;
       }
 
@@ -241,7 +238,6 @@ const PackageManagement = () => {
         ...editingPackage,
         price: price,
         packageLimit: editingPackage.packageLimit || null,
-        trialDays: editingPackage.trialDays || 0,
       };
 
       console.log(
@@ -381,9 +377,6 @@ const PackageManagement = () => {
                     Limit
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Trial
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Action
                   </th>
                 </tr>
@@ -438,9 +431,6 @@ const PackageManagement = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {pkg.packageLimit || 'Unlimited'}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {pkg.trialDays ? `${pkg.trialDays} days` : 'No trial'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div className="relative dropdown-container">
@@ -554,12 +544,6 @@ const PackageManagement = () => {
                         {pkg.packageLimit || 'Unlimited'}
                       </p>
                     </div>
-                    <div>
-                      <span className="font-medium">Trial:</span>
-                      <p className="mt-1 text-gray-900">
-                        {pkg.trialDays ? `${pkg.trialDays} days` : 'No trial'}
-                      </p>
-                    </div>
                   </div>
                 </div>
               ))}
@@ -641,12 +625,6 @@ const PackageManagement = () => {
                       <span className="font-medium">Limit:</span>
                       <span className="text-gray-900">
                         {pkg.packageLimit || 'Unlimited'}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="font-medium">Trial:</span>
-                      <span className="text-gray-900">
-                        {pkg.trialDays ? `${pkg.trialDays} days` : 'No trial'}
                       </span>
                     </div>
                   </div>
@@ -768,6 +746,8 @@ const PackageManagement = () => {
                       }
                       className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-900 text-sm"
                     >
+                      <option value="2 days">2 Days</option>
+                      <option value="1 week">1 Week</option>
                       <option value="1 month">1 Month</option>
                       <option value="3 months">3 Months</option>
                       <option value="6 months">6 Months</option>
@@ -778,43 +758,23 @@ const PackageManagement = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Package Limit
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      placeholder="Leave empty for unlimited"
-                      value={createPackageData.packageLimit}
-                      onChange={(e) =>
-                        setCreatePackageData({
-                          ...createPackageData,
-                          packageLimit: e.target.value,
-                        })
-                      }
-                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Trial Days
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      placeholder="0"
-                      value={createPackageData.trialDays}
-                      onChange={(e) =>
-                        setCreatePackageData({
-                          ...createPackageData,
-                          trialDays: e.target.value,
-                        })
-                      }
-                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
-                    />
-                  </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    Package Limit
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    placeholder="Leave empty for unlimited"
+                    value={createPackageData.packageLimit}
+                    onChange={(e) =>
+                      setCreatePackageData({
+                        ...createPackageData,
+                        packageLimit: e.target.value,
+                      })
+                    }
+                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
+                  />
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3 pt-4">
@@ -951,6 +911,8 @@ const PackageManagement = () => {
                       }
                       className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent appearance-none text-gray-900 text-sm"
                     >
+                      <option value="2 days">2 Days</option>
+                      <option value="1 week">1 Week</option>
                       <option value="1 month">1 Month</option>
                       <option value="3 months">3 Months</option>
                       <option value="6 months">6 Months</option>
@@ -961,43 +923,23 @@ const PackageManagement = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Package Limit
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      placeholder="Leave empty for unlimited"
-                      value={editingPackage.packageLimit || ''}
-                      onChange={(e) =>
-                        setEditingPackage({
-                          ...editingPackage,
-                          packageLimit: e.target.value,
-                        })
-                      }
-                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Trial Days
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      placeholder="0"
-                      value={editingPackage.trialDays || ''}
-                      onChange={(e) =>
-                        setEditingPackage({
-                          ...editingPackage,
-                          trialDays: e.target.value,
-                        })
-                      }
-                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
-                    />
-                  </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    Package Limit
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    placeholder="Leave empty for unlimited"
+                    value={editingPackage.packageLimit || ''}
+                    onChange={(e) =>
+                      setEditingPackage({
+                        ...editingPackage,
+                        packageLimit: e.target.value,
+                      })
+                    }
+                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
+                  />
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3 pt-4">
