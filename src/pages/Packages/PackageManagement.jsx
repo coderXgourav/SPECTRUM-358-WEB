@@ -36,6 +36,8 @@ const PackageManagement = () => {
     price: "",
     duration: "1 month",
     packageLimit: "",
+    storage: "",
+    maxGroup: "",
   });
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingPackage, setEditingPackage] = useState(null);
@@ -138,6 +140,8 @@ const PackageManagement = () => {
         ...createPackageData,
         price: price,
         packageLimit: createPackageData.packageLimit || null,
+        storage: createPackageData.storage || 0,
+        maxGroup: createPackageData.maxGroup || 0,
       };
 
       await packageService.createPackage(packageData);
@@ -148,6 +152,8 @@ const PackageManagement = () => {
         price: "",
         duration: "1 month",
         packageLimit: "",
+        storage: "",
+        maxGroup: "",
       });
       setError(null);
       await fetchPackages();
@@ -238,6 +244,8 @@ const PackageManagement = () => {
         ...editingPackage,
         price: price,
         packageLimit: editingPackage.packageLimit || null,
+        storage: editingPackage.storage || 0,
+        maxGroup: editingPackage.maxGroup || 0,
       };
 
       console.log(
@@ -758,23 +766,61 @@ const PackageManagement = () => {
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    Package Limit
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    placeholder="Leave empty for unlimited"
-                    value={createPackageData.packageLimit}
-                    onChange={(e) =>
-                      setCreatePackageData({
-                        ...createPackageData,
-                        packageLimit: e.target.value,
-                      })
-                    }
-                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      Package Limit
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      placeholder="Leave empty for unlimited"
+                      value={createPackageData.packageLimit}
+                      onChange={(e) =>
+                        setCreatePackageData({
+                          ...createPackageData,
+                          packageLimit: e.target.value,
+                        })
+                      }
+                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      Storage (MB)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="0"
+                      value={createPackageData.storage}
+                      onChange={(e) =>
+                        setCreatePackageData({
+                          ...createPackageData,
+                          storage: e.target.value,
+                        })
+                      }
+                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      Max Groups
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="0"
+                      value={createPackageData.maxGroup}
+                      onChange={(e) =>
+                        setCreatePackageData({
+                          ...createPackageData,
+                          maxGroup: e.target.value,
+                        })
+                      }
+                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
+                    />
+                  </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3 pt-4">
@@ -923,23 +969,61 @@ const PackageManagement = () => {
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    Package Limit
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    placeholder="Leave empty for unlimited"
-                    value={editingPackage.packageLimit || ''}
-                    onChange={(e) =>
-                      setEditingPackage({
-                        ...editingPackage,
-                        packageLimit: e.target.value,
-                      })
-                    }
-                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      Package Limit
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      placeholder="Leave empty for unlimited"
+                      value={editingPackage.packageLimit || ''}
+                      onChange={(e) =>
+                        setEditingPackage({
+                          ...editingPackage,
+                          packageLimit: e.target.value,
+                        })
+                      }
+                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      Storage (MB)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="0"
+                      value={editingPackage.storage || ''}
+                      onChange={(e) =>
+                        setEditingPackage({
+                          ...editingPackage,
+                          storage: e.target.value,
+                        })
+                      }
+                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      Max Groups
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="0"
+                      value={editingPackage.maxGroup || ''}
+                      onChange={(e) =>
+                        setEditingPackage({
+                          ...editingPackage,
+                          maxGroup: e.target.value,
+                        })
+                      }
+                      className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5B700] focus:border-transparent placeholder-gray-400 text-sm"
+                    />
+                  </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3 pt-4">
